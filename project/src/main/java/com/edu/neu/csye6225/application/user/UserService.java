@@ -106,28 +106,18 @@ public class UserService {
         return userCredentials;
     }
 
-    public String[] validateUserCredentials_1(String user_header){
-        Map<String, HttpStatus> result = new HashMap<>();
+    public HashMap<String, String> createUserResponseBody(User user){
 
-        String[] userHeaderSplit = user_header.split(" ");
+        HashMap<String, String> userDetails = new HashMap<>();
 
-        byte[] decodedBytes = Base64.decodeBase64(userHeaderSplit[1]);
-        String decodedString = new String(decodedBytes);
-        String[] userCredentials = decodedString.split(":");
+        userDetails.put("id", user.getId().toString());
+        userDetails.put("firstName", user.getFirst_name());
+        userDetails.put("lastName", user.getLast_name());
+        userDetails.put("emailId", user.getUsername());
+        userDetails.put("account_created", user.getAccount_created().toString());
+        userDetails.put("account_updated", user.getAccount_updated().toString());
 
-        String username = userCredentials[0];
-        String password = userCredentials[1];
-
-//        User u = userRepository.findUserByUsername(username);
-//
-//        if(u.equals(null)){
-//            return false;
-//        } else if(u.getPassword() != password){
-//            return false;
-//        } else {
-//            return true;
-//        }
-            return userCredentials;
+        return userDetails;
     }
 
 }
