@@ -4,6 +4,8 @@ package com.edu.neu.csye6225.application.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -22,13 +24,15 @@ public class UserController {
     }
 
 
-    @GetMapping(path = "self/")
+    @GetMapping(path = "self")
     public ResponseEntity<Object> getUser(HttpServletRequest request){
         //Array of Strings to store user credentials
         String[] user_credentials;
+        System.out.println("getUser: A");
         
         //variables to store update values from user
         String userHeader = request.getHeader("Authorization");
+//        System.out.println("getUser: B "+userHeader);
 
         //No credentials provided
         if(userHeader.endsWith("Og==")) {
@@ -43,12 +47,24 @@ public class UserController {
 
         User user;
         if(!userService.checkIfUserExists(user_credentials[0])){
+//            System.out.println("getUser: B "+userService.checkIfUserExists(user_credentials[0]));
             return new ResponseEntity<Object>("User dont Exists",HttpStatus.BAD_REQUEST);
         } else {
-            user = userService.userRepository.findUserByUsername(user_credentials[0]);
-            if(user.getPassword() != user_credentials[1]){
+//            user = userService.userRepository.findUserByUsername(user_credentials[0]);
+            user = userService.getUserByUsername(user_credentials[0]);
+//            if(user.getPassword() != user_credentials[1]){
+//            System.out.println("user->"+user.toString());
+            String password = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+            System.out.println("password"+password);
+
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+            if(!encoder.matches(user_credentials[1],user.getPassword())){
+                System.out.println("User password:"+user.getPassword());
+
                 return new ResponseEntity<Object>("Invalid Password",HttpStatus.BAD_REQUEST);
             } else {
+                System.out.println("ABC");
                 return new ResponseEntity<Object>(userService.createUserResponseBody(user), HttpStatus.CREATED);
             }
         }
