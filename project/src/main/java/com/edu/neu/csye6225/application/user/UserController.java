@@ -21,19 +21,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    /**
+
     @GetMapping(path = "self/")
     public ResponseEntity<Object> getUser(HttpServletRequest request){
-        //to store user credentials
-        String[] user_credentials = new String[2];
-        String username;
-        String password;
-
+        //Array of Strings to store user credentials
+        String[] user_credentials;
+        
         //variables to store update values from user
         String userHeader = request.getHeader("Authorization");
-        boolean validated;
 
-        //no credentials provided
+        //No credentials provided
         if(userHeader.endsWith("Og==")) {
             return new ResponseEntity<Object>("No Credentials sent",HttpStatus.BAD_REQUEST);
         }
@@ -44,20 +41,20 @@ public class UserController {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
 
-//        if(validated){
-//            userService.
-//        }
-        if(userService.checkIfUserExists())
-
-        User u = userService.getUserByUsername(username);
-        if(u.getFirst_name() == "User Not Found"){
-            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        User user;
+        if(!userService.checkIfUserExists(user_credentials[0])){
+            return new ResponseEntity<Object>("User dont Exists",HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>(u, HttpStatus.ACCEPTED);
+            user = userService.userRepository.findUserByUsername(user_credentials[0]);
+            if(user.getPassword() != user_credentials[1]){
+                return new ResponseEntity<Object>("Invalid Password",HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<Object>(userService.createUserResponseBody(user), HttpStatus.CREATED);
+            }
         }
     }
 
-     **/
+
 
     @PostMapping(produces = "application/json")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
