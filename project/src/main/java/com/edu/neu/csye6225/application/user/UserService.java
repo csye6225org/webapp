@@ -25,10 +25,20 @@ public class UserService {
      * @return User
      */
     public User getUserByUsername(String username){
-        if(!userRepository.userExists(username)){
-            return new User("User Not Found");
+//        if(!userRepository.userExists(username)){
+//            return new User("User Not Found");
+//        }
+//        return userRepository.findUserByUsername(username);
+        User user = new User();
+        List<User> users = userRepository.findAll();
+        for(User u:users){
+            if(u.getUsername().equals(username)){
+//                user.setUsername(u.getUsername());
+//                user.setFirst_name(u.getFirst_name());
+                user = u;
+            }
         }
-        return userRepository.findUserByUsername(username);
+        return user;
     }
 
     /**
@@ -86,9 +96,11 @@ public class UserService {
     }
 
     public boolean checkIfUserExists(String username){
-        List<User> users = new ArrayList<>();
+        System.out.println("checkIfUserExists:username"+username);
+        List<User> users = userRepository.findAll();
         for(User u:users){
-            if(u.getUsername() == username){
+            System.out.println(u.getUsername());
+            if(u.getUsername().equals(username)){
                 return true;
             }
         }
@@ -103,6 +115,11 @@ public class UserService {
         decodedBytes = Base64.decodeBase64(userHeaderSplit[1]);
         decodedString = new String(decodedBytes);
         String[] userCredentials = decodedString.split(":");
+
+        System.out.println("UserService.getUserCredentials: userCredentials"
+                +userCredentials[0]
+                +"->"
+                +userCredentials[1]);
         return userCredentials;
     }
 
