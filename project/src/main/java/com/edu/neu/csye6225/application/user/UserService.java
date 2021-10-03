@@ -20,21 +20,19 @@ public class UserService {
     }
 
     /**
-     * Get User by Id
+     * Get User by username.
+     * This method will search through all users present in database
+     * and will return the user object whose username matches the
+     * username parameter sent to this method.
+     * Time complexity is O(n)
      * @param username
      * @return User
      */
     public User getUserByUsername(String username){
-//        if(!userRepository.userExists(username)){
-//            return new User("User Not Found");
-//        }
-//        return userRepository.findUserByUsername(username);
         User user = new User();
         List<User> users = userRepository.findAll();
         for(User u:users){
             if(u.getUsername().equals(username)){
-//                user.setUsername(u.getUsername());
-//                user.setFirst_name(u.getFirst_name());
                 user = u;
             }
         }
@@ -68,34 +66,39 @@ public class UserService {
      * @return HttpStatus
      */
     public HttpStatus updateUser(User user){
-        if (    user.getFirst_name() == null &&
-                user.getLast_name() == null &&
-                user.getUsername() == null &&
+        System.out.println("userService.updateUser: A");
+        if (    user.getFirst_name() == null ||
+                user.getLast_name() == null ||
+                user.getUsername() == null ||
                 user.getPassword() == null
         ){
-            return HttpStatus.NO_CONTENT;
-        } else if(user.getUsername() != userRepository.findUserByUsername(user.getUsername()).getUsername()){
+            System.out.println("userService.updateUser: B");
+            return HttpStatus.BAD_REQUEST;
+        } else if(!user.getUsername().equals(getUserByUsername(user.getUsername()).getUsername())){
+            System.out.println("userService.updateUser: C");
             return HttpStatus.BAD_REQUEST;
         } else {
-            User u = userRepository.findUserByUsername(user.getUsername());
+            User u = getUserByUsername(user.getUsername());
 
+            System.out.println("1: "+u.toString());
             u.setFirst_name(user.getFirst_name());
             u.setLast_name(user.getLast_name());
-            u.setPassword(user.getPassword());
+//            u.setPassword(user.getPassword());
+            u.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
             u.setAccount_updated(LocalDateTime.now());
 
+            System.out.println("2: "+u.toString());
             userRepository.save(u);
 
             return HttpStatus.OK;
         }
     }
 
-    public boolean emailStringValidator(String email) {
-        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        return email.matches(regex);
-    }
 
     public boolean checkIfUserExists(String username){
+        if(username == null){
+            return false;
+        }
         System.out.println("checkIfUserExists:username"+username);
         List<User> users = userRepository.findAll();
         for(User u:users){
@@ -123,9 +126,9 @@ public class UserService {
         return userCredentials;
     }
 
-    public HashMap<String, String> createUserResponseBody(User user){
+    public Map<String, String> userResponseBody(User user){
 
-        HashMap<String, String> userDetails = new HashMap<>();
+        Map<String, String> userDetails = new HashMap<>();
 
         userDetails.put("id", user.getId().toString());
         userDetails.put("firstName", user.getFirst_name());
