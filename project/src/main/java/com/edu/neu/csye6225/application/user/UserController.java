@@ -23,41 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
-
-    @GetMapping(path = "self")
-    public ResponseEntity<Object> getUser(HttpServletRequest request){
-
-        String[] user_credentials; // Array of Strings to store user credentials.
-
-        String userHeader = request.getHeader("Authorization");
-
-        if(userHeader.endsWith("Og==")) { // When No credentials are provided.
-            return new ResponseEntity<Object>("No credentials sent",HttpStatus.BAD_REQUEST);
-        }
-        else if (userHeader!=null && userHeader.startsWith("Basic")) { // When Header is correct
-            user_credentials = userService.getUserCredentials(userHeader);
-        }
-        else { // When authentication type is correct.
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }
-
-        User user;
-        if(!userService.checkIfUserExists(user_credentials[0])){ // When user does not exist in database.
-            return new ResponseEntity<Object>("User dont Exists",HttpStatus.BAD_REQUEST);
-        } else { // When correct user is getting requested.
-            user = userService.getUserByUsername(user_credentials[0]);
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-            if(!encoder.matches(user_credentials[1],user.getPassword())){ // When password is not correct.
-                return new ResponseEntity<Object>("Invalid Password",HttpStatus.BAD_REQUEST);
-            } else { // When everything is correct.
-                return new ResponseEntity<Object>(userService.createUserResponseBody(user), HttpStatus.CREATED);
-            }
-        }
-    }
-
-
-
+    
     @PostMapping(produces = "application/json")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
         if (user.getFirst_name() == null ||
@@ -91,5 +57,35 @@ public class UserController {
         }
     }
 
+    @GetMapping(path = "self")
+    public ResponseEntity<Object> getUser(HttpServletRequest request){
 
+        String[] user_credentials; // Array of Strings to store user credentials.
+
+        String userHeader = request.getHeader("Authorization");
+
+        if(userHeader.endsWith("Og==")) { // When No credentials are provided.
+            return new ResponseEntity<Object>("No credentials sent",HttpStatus.BAD_REQUEST);
+        }
+        else if (userHeader!=null && userHeader.startsWith("Basic")) { // When Header is correct
+            user_credentials = userService.getUserCredentials(userHeader);
+        }
+        else { // When authentication type is correct.
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+
+        User user;
+        if(!userService.checkIfUserExists(user_credentials[0])){ // When user does not exist in database.
+            return new ResponseEntity<Object>("User dont Exists",HttpStatus.BAD_REQUEST);
+        } else { // When correct user is getting requested.
+            user = userService.getUserByUsername(user_credentials[0]);
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+            if(!encoder.matches(user_credentials[1],user.getPassword())){ // When password is not correct.
+                return new ResponseEntity<Object>("Invalid Password",HttpStatus.BAD_REQUEST);
+            } else { // When everything is correct.
+                return new ResponseEntity<Object>(userService.createUserResponseBody(user), HttpStatus.CREATED);
+            }
+        }
+    }
 }
