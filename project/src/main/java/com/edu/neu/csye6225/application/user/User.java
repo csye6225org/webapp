@@ -54,7 +54,7 @@ public class User {
 
     @Column(
             name = "account_updated",
-            columnDefinition = "DATE"
+            columnDefinition = "DATETIME"
     )
     private LocalDateTime account_updated;
 

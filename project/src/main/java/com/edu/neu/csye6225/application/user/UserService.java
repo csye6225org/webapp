@@ -65,19 +65,19 @@ public class UserService {
      * @param user
      * @return HttpStatus
      */
-    public HttpStatus updateUser(User user){
-        System.out.println("userService.updateUser: A");
-        if (    user.getFirst_name() == null ||
-                user.getLast_name() == null ||
-                user.getUsername() == null ||
-                user.getPassword() == null
-        ){
-            System.out.println("userService.updateUser: B");
-            return HttpStatus.BAD_REQUEST;
-        } else if(!user.getUsername().equals(getUserByUsername(user.getUsername()).getUsername())){
-            System.out.println("userService.updateUser: C");
-            return HttpStatus.BAD_REQUEST;
-        } else {
+    public void updateUser(User user){
+//        System.out.println("userService.updateUser: A");
+//        if (    user.getFirst_name() == null ||
+//                user.getLast_name() == null ||
+//                user.getUsername() == null ||
+//                user.getPassword() == null
+//        ){
+//            System.out.println("userService.updateUser: B");
+//            return HttpStatus.BAD_REQUEST;
+//        } else if(!user.getUsername().equals(getUserByUsername(user.getUsername()).getUsername())){
+//            System.out.println("userService.updateUser: C");
+//            return HttpStatus.BAD_REQUEST;
+//        } else {
             User u = getUserByUsername(user.getUsername());
 
             System.out.println("1: "+u.toString());
@@ -90,8 +90,8 @@ public class UserService {
             System.out.println("2: "+u.toString());
             userRepository.save(u);
 
-            return HttpStatus.OK;
-        }
+//            return true;
+//        }
     }
 
 
