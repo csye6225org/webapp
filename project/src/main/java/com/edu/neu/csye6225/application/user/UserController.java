@@ -26,45 +26,31 @@ public class UserController {
 
     @GetMapping(path = "self")
     public ResponseEntity<Object> getUser(HttpServletRequest request){
-        //Array of Strings to store user credentials
-        String[] user_credentials;
-        System.out.println("getUser: A");
-        
-        //variables to store update values from user
-        String userHeader = request.getHeader("Authorization");
-//        System.out.println("getUser: B "+userHeader);
 
-        //No credentials provided
-        if(userHeader.endsWith("Og==")) {
-            return new ResponseEntity<Object>("No Credentials sent",HttpStatus.BAD_REQUEST);
+        String[] user_credentials; // Array of Strings to store user credentials.
+
+        String userHeader = request.getHeader("Authorization");
+
+        if(userHeader.endsWith("Og==")) { // When No credentials are provided.
+            return new ResponseEntity<Object>("No credentials sent",HttpStatus.BAD_REQUEST);
         }
-        else if (userHeader!=null && userHeader.startsWith("Basic")) {
+        else if (userHeader!=null && userHeader.startsWith("Basic")) { // When Header is correct
             user_credentials = userService.getUserCredentials(userHeader);
         }
-        else {
+        else { // When authentication type is correct.
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
 
         User user;
-        if(!userService.checkIfUserExists(user_credentials[0])){
-//            System.out.println("getUser: B "+userService.checkIfUserExists(user_credentials[0]));
+        if(!userService.checkIfUserExists(user_credentials[0])){ // When user does not exist in database.
             return new ResponseEntity<Object>("User dont Exists",HttpStatus.BAD_REQUEST);
-        } else {
-//            user = userService.userRepository.findUserByUsername(user_credentials[0]);
+        } else { // When correct user is getting requested.
             user = userService.getUserByUsername(user_credentials[0]);
-//            if(user.getPassword() != user_credentials[1]){
-//            System.out.println("user->"+user.toString());
-            String password = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-            System.out.println("password"+password);
-
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-            if(!encoder.matches(user_credentials[1],user.getPassword())){
-                System.out.println("User password:"+user.getPassword());
-
+            if(!encoder.matches(user_credentials[1],user.getPassword())){ // When password is not correct.
                 return new ResponseEntity<Object>("Invalid Password",HttpStatus.BAD_REQUEST);
-            } else {
-                System.out.println("ABC");
+            } else { // When everything is correct.
                 return new ResponseEntity<Object>(userService.createUserResponseBody(user), HttpStatus.CREATED);
             }
         }
@@ -85,7 +71,7 @@ public class UserController {
         } else if (!EmailValidator.getInstance().isValid(user.getUsername())) {
             System.out.println("B");
             return new ResponseEntity<Object>("Username is not a valid Email", HttpStatus.BAD_REQUEST);
-        } else if (!userService.checkIfUserExists(user.getUsername())) {
+        } else if (userService.checkIfUserExists(user.getUsername())) {
             System.out.println("C");
             return new ResponseEntity<Object>("User Already Exists",HttpStatus.BAD_REQUEST);
         } else {
