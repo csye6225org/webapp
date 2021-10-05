@@ -74,7 +74,8 @@ public class UserController {
 
         if(header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)){
             return header_authentication_result;
-        } else if(!userService.checkIfUserExists(user.getUsername())){ // When username in JSON of Request payload is changed
+        } else if(!userService.checkIfUserExists(user.getUsername())){
+            // When username in JSON of Request payload is changed
             return new ResponseEntity<Object>(
                     "Username cannot be updated",
                     HttpStatus.BAD_REQUEST
@@ -106,8 +107,6 @@ public class UserController {
                 );
             }
         }
-
-
 
     }
 
