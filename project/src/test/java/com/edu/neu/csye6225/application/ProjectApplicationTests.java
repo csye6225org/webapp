@@ -1,56 +1,47 @@
 package com.edu.neu.csye6225.application;
 
 import com.edu.neu.csye6225.application.user.User;
-import com.edu.neu.csye6225.application.user.UserController;
 import com.edu.neu.csye6225.application.user.UserRepository;
-import com.edu.neu.csye6225.application.user.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.test.web.servlet.MockMvc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//@SpringBootTest
-
+@SpringBootTest
 class ProjectApplicationTests {
 
-	@Autowired
-	MockMvc mockMvc;
+	@Test
+	public void contextLoads() {
+	}
 
-	@Autowired
-	ObjectMapper mapper;
+	@Mock
+	UserRepository userDao = Mockito.mock(UserRepository.class);
 
-	@MockBean
-	UserRepository patientRecordRepository;
+	@Test
+	public void testAddUser() {
+		UUID id = UUID.randomUUID();
+		LocalDateTime created_at = LocalDateTime.now();
+		ZonedDateTime created_at_zoned =
+				created_at.atZone(ZoneId.systemDefault())
+						.withZoneSameInstant(ZoneId.of("Z"));
 
-//	@Test
-//	void contextLoads() {
-//	}
+		User u = new User();
 
-//	@Autowired
-//	private UserController controller;
+		u.setUsername("fname.lname@gmail.com");
+		u.setFirst_name("fname");
+		u.setLast_name("lname");
+		u.setPassword("Fname@123");
+		u.setAccount_updated(created_at_zoned);
+		u.setAccount_created(created_at_zoned);
 
-//	@Test
-//	public void contextLoads_1() throws Exception {
-//		assertThat(controller).isNotNull();
-//	}
+		userDao.save(u);
 
-
-
-
-
-
+		Mockito.verify(userDao, Mockito.times(1)).save(u);
+	}
 }

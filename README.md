@@ -52,8 +52,12 @@ https://github.com/csye6225org/webapp
 ```
 /home/varad/Desktop/NSC/Github/
 ```
-4. Run the web application from IntelliJ.
+4. Run the Web application
+   4.1. Run 'ProjectApplicationTests.java' from IntelliJ
+   4.2. Run 'ProjectApplication.java' from IntelliJ.
 5. Open Postman.
+   5.1. Workspace 'Csye6225'
+   5.2. Folder 'webapp'
 6. First we will demo POST request.
 
 6.1. URL: 
