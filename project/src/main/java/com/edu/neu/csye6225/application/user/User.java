@@ -61,7 +61,9 @@ public class User {
     private ZonedDateTime account_updated;
 
     public UUID getId() {
-        return id;
+        UUID uid = new UUID(0,0);
+        if (id == null) return uid;
+        else return id;
     }
 
     public void setId(UUID id) {
@@ -102,7 +104,9 @@ public class User {
 
     public ZonedDateTime getAccount_created() {
 
-        return account_created.withZoneSameInstant(ZoneId.of("Z"));
+        ZonedDateTime zdt = ZonedDateTime.of(01,01,01,01,01,01,01,ZoneId.of("Z"));
+        if(account_created == null) return zdt;
+        else return account_created.withZoneSameInstant(ZoneId.of("Z"));
     }
 
     public void setAccount_created(ZonedDateTime account_created) {
@@ -111,7 +115,9 @@ public class User {
 
     public ZonedDateTime getAccount_updated() {
 
-        return account_updated.withZoneSameInstant(ZoneId.of("Z"));
+        ZonedDateTime zdt = ZonedDateTime.of(01,01,01,01,01,01,01,ZoneId.of("Z"));
+        if(account_updated == null) return zdt;
+        else return account_updated.withZoneSameInstant(ZoneId.of("Z"));
     }
 
     public void setAccount_updated(ZonedDateTime account_updated) {
