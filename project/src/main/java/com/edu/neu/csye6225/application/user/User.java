@@ -136,12 +136,12 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
-                ", username='" + username + '\'' +
-                ", account_created=" + account_created +
-                ", account_updated=" + account_updated +
+                "id=" + this.getId().toString() +
+                ", first_name='" + this.getFirst_name() + '\'' +
+                ", last_name='" + this.getLast_name() + '\'' +
+                ", username='" + this.getUsername() + '\'' +
+                ", account_created=" + this.getAccount_created() +
+                ", account_updated=" + this.getAccount_updated() +
                 '}';
     }
 }
