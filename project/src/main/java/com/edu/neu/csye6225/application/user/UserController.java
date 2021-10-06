@@ -9,8 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "v1/user")
@@ -68,9 +72,14 @@ public class UserController {
 
 
     @PutMapping(path = "self")
-    public ResponseEntity<Object> updateUser(HttpServletRequest request, @RequestBody User user){
+    public ResponseEntity<Object> updateUser(HttpServletRequest request, @RequestBody User user) {
 
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
+        UUID uid = new UUID(0,0);
+        System.out.println("uid = "+uid.toString());
+        System.out.println("date created = "+user.getAccount_updated().toString());
+        System.out.println("date updated = "+user.getAccount_created().toString());
+
 
         if(header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)){
             return header_authentication_result;
@@ -89,7 +98,13 @@ public class UserController {
                     "Firstname, Lastname, Username and Password cannot be empty in JSON request body.",
                     HttpStatus.BAD_REQUEST);
         }
-        else { // When everything is correct.
+        else if
+        (
+             user.getAccount_updated().equals(ZonedDateTime.of(01,01,01,01,01,01,01, ZoneId.of("Z"))) &&
+             user.getAccount_created().equals(ZonedDateTime.of(01,01,01,01,01,01,01, ZoneId.of("Z"))) &&
+             user.getId().equals(uid)
+        )
+        { // When everything is correct.
 
             String username = header_authentication_result.getBody().toString();
 
@@ -106,6 +121,12 @@ public class UserController {
                         HttpStatus.OK
                 );
             }
+        }
+        else {
+            return new ResponseEntity<Object>(
+                    "You cannot update fields other than Firstname, Lastname and Password.",
+                    HttpStatus.BAD_REQUEST
+            );
         }
 
     }
