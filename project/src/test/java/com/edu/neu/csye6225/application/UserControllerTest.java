@@ -8,6 +8,8 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 
@@ -25,14 +27,18 @@ public class UserControllerTest {
     public void testAddUser() {
         UUID id = UUID.randomUUID();
         LocalDateTime created_at = LocalDateTime.now();
+        ZonedDateTime created_at_zoned =
+                created_at.atZone(ZoneId.systemDefault())
+                .withZoneSameInstant(ZoneId.of("Z"));
+
         User u = new User();
 
         u.setUsername("fname.lname@gmail.com");
         u.setFirst_name("fname");
         u.setLast_name("lname");
         u.setPassword("Fname@123");
-        u.setAccount_updated(created_at);
-        u.setAccount_created(created_at);
+        u.setAccount_updated(created_at_zoned);
+        u.setAccount_created(created_at_zoned);
 
         userDao.save(u);
 
