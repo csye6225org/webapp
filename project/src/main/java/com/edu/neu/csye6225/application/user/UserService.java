@@ -8,7 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
@@ -48,12 +52,17 @@ public class UserService {
      */
     public User createUser(User user) {
 
+
         UUID uuid = UUID.randomUUID();
         LocalDateTime created_at = LocalDateTime.now();
 
+        ZonedDateTime created_at_zoned = created_at.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Z"));
+//		ZonedDateTime utcZoned = ldtZoned.withZoneSameInstant(ZoneId.of("Z"));
+        System.out.println(created_at_zoned);
+
         user.setId(uuid);
-        user.setAccount_created(created_at);
-        user.setAccount_updated(created_at);
+        user.setAccount_created(created_at_zoned);
+        user.setAccount_updated(created_at_zoned);
 
         user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
 
@@ -71,11 +80,14 @@ public class UserService {
 
             User u = getUserByUsername(user.getUsername());
 
+        LocalDateTime updated_at = LocalDateTime.now();
+        ZonedDateTime updated_at_zoned = updated_at.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Z"));
+
             System.out.println("1: "+u.toString());
             u.setFirst_name(user.getFirst_name());
             u.setLast_name(user.getLast_name());
             u.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
-            u.setAccount_updated(LocalDateTime.now());
+            u.setAccount_updated(updated_at_zoned);
 
             System.out.println("2: "+u.toString());
             userRepository.save(u);

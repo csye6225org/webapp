@@ -2,6 +2,8 @@ package com.edu.neu.csye6225.application.user;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Entity(name = "User")
@@ -50,13 +52,13 @@ public class User {
             columnDefinition = "TIMESTAMP",
             updatable = false
     )
-    private LocalDateTime account_created;
+    private ZonedDateTime account_created;
 
     @Column(
             name = "account_updated",
             columnDefinition = "TIMESTAMP"
     )
-    private LocalDateTime account_updated;
+    private ZonedDateTime account_updated;
 
     public UUID getId() {
         return id;
@@ -98,19 +100,22 @@ public class User {
         this.password = password;
     }
 
-    public LocalDateTime getAccount_created() {
-        return account_created;
+    public ZonedDateTime getAccount_created() {
+
+        return account_created.withZoneSameInstant(ZoneId.of("Z"));
     }
 
-    public void setAccount_created(LocalDateTime account_created) {
+    public void setAccount_created(ZonedDateTime account_created) {
         this.account_created = account_created;
     }
 
-    public LocalDateTime getAccount_updated() {
-        return account_updated;
+    public ZonedDateTime getAccount_updated() {
+
+        return account_updated.withZoneSameInstant(ZoneId.of("Z"));
     }
 
-    public void setAccount_updated(LocalDateTime account_updated) {
+    public void setAccount_updated(ZonedDateTime account_updated) {
+
         this.account_updated = account_updated;
     }
 
