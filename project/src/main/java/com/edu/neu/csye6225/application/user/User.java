@@ -47,14 +47,14 @@ public class User {
     @Column(
             name = "account_created",
             nullable = false,
-            columnDefinition = "DATE",
+            columnDefinition = "TIMESTAMP",
             updatable = false
     )
     private LocalDateTime account_created;
 
     @Column(
             name = "account_updated",
-            columnDefinition = "DATETIME"
+            columnDefinition = "TIMESTAMP"
     )
     private LocalDateTime account_updated;
 
