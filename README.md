@@ -101,13 +101,6 @@ SELECT * FROM "user";
 User Already Exists
 ```
 
-6.5. Empty One of the field, then click send. Response to expect.
-```
-400 Bad Request
-
-Firstname, Lastname, Username and Password cannot be empty in JSON request body.
-
-```
 6.6. Show that Non email username does not get created.
 Request Body:
 ```
