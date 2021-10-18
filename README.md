@@ -242,3 +242,23 @@ https://github.com/csye6225org/webapp/blob/main/.gitignore
 5. Go to organization and show hierarchy.
 6. Show that MFA is enabled on every account.
 ## Thank you.
+
+## Generate executable Jar.
+
+### 1. Correct path for Java jdk and jre
+
+```
+# export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+# export PATH=$JAVA_HOME/bin:$PATH
+```
+
+### 2. Go to project location where pom.xml is present
+
+```
+# cd /home/varad/Desktop/NSC/Github/webapp/project/
+```
+### 3. Execute maven build
+
+```
+# mvn clean install
+```
