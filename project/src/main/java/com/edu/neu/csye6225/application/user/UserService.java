@@ -78,19 +78,19 @@ public class UserService {
      */
     public void updateUser(User user){
 
-            User u = getUserByUsername(user.getUsername());
+        User u = getUserByUsername(user.getUsername());
 
         LocalDateTime updated_at = LocalDateTime.now();
         ZonedDateTime updated_at_zoned = updated_at.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Z"));
 
-            System.out.println("1: "+u.toString());
-            u.setFirst_name(user.getFirst_name());
-            u.setLast_name(user.getLast_name());
-            u.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
-            u.setAccount_updated(updated_at_zoned);
+        System.out.println("1: "+u.toString());
+        u.setFirst_name(user.getFirst_name());
+        u.setLast_name(user.getLast_name());
+        u.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+        u.setAccount_updated(updated_at_zoned);
 
-            System.out.println("2: "+u.toString());
-            userRepository.save(u);
+        System.out.println("2: "+u.toString());
+        userRepository.save(u);
 
     }
 
