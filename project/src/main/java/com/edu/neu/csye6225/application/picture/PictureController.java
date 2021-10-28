@@ -41,7 +41,12 @@ public class PictureController {
             return header_authentication_result;
         } else {
             String contentType = request.getContentType();
-
+            if(contentType == null)
+            {
+                return new ResponseEntity<Object>(
+                        "There should be a file or atlease correct file",
+                        HttpStatus.BAD_REQUEST);
+            }
             if(contentType.equals("image/jpeg") || contentType.equals("image/png"))
             {
                 InputStream pictureIS = request.getInputStream();
