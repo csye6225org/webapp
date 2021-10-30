@@ -50,8 +50,6 @@ public class PictureController {
             if(contentType.equals("image/jpeg") || contentType.equals("image/png"))
             {
                 InputStream pictureIS = request.getInputStream();
-
-
                 byte[] pictureBA = IOUtils.toByteArray(pictureIS);
 
                 String name = "file.txt";
