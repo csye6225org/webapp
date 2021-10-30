@@ -91,6 +91,7 @@ public class PictureController {
         }
     }
 
+    @GetMapping("/self/pic/")
     public ResponseEntity<Object> getPicture(HttpServletRequest request){
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
