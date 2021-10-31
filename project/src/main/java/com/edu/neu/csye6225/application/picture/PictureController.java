@@ -50,8 +50,6 @@ public class PictureController {
             if(contentType.equals("image/jpeg") || contentType.equals("image/png"))
             {
                 InputStream pictureIS = request.getInputStream();
-
-
                 byte[] pictureBA = IOUtils.toByteArray(pictureIS);
 
                 String name = "file.txt";
@@ -93,6 +91,7 @@ public class PictureController {
         }
     }
 
+    @GetMapping("/self/pic/")
     public ResponseEntity<Object> getPicture(HttpServletRequest request){
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
@@ -103,6 +102,10 @@ public class PictureController {
             String[] userCredentials = userService.getUserCredentials(userHeader);
 
             Map<String, String> responseBody = pictureService.getPictureBodyByUsername(userCredentials[0]);
+
+            if(responseBody == null){
+                return new ResponseEntity<>("User dont have a picture", HttpStatus.NOT_FOUND);
+            }
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }
