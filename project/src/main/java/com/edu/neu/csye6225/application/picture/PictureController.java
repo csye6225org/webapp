@@ -103,6 +103,10 @@ public class PictureController {
 
             Map<String, String> responseBody = pictureService.getPictureBodyByUsername(userCredentials[0]);
 
+            if(responseBody == null){
+                return new ResponseEntity<>("User dont have a picture", HttpStatus.NOT_FOUND);
+            }
+
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }
     }
