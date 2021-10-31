@@ -149,6 +149,10 @@ public class PictureService {
         User u = userService.getUserByUsername(username);
         Picture p = getPictureByUserId(u.getId());
 
+        if(p == null){
+            return null;
+        }
+
         Map<String, String> pictureDetails = new HashMap<>();
         pictureDetails.put("file_name",p.getFilename());
         pictureDetails.put("id",p.getId().toString());
