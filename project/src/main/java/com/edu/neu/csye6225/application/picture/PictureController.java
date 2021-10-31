@@ -65,8 +65,11 @@ public class PictureController {
                         pictureBA
                 );
 
+                pictureService.uploadPicture(pictureMPF, userCredentials[0]);
+                Map<String, String> responseBody = pictureService.getPictureBodyByUsername(userCredentials[0]);
+
                 return new ResponseEntity<>(
-                        pictureService.uploadPicture(pictureMPF, userCredentials[0]),
+                        responseBody,
                         HttpStatus.OK
                 );
             } else {
