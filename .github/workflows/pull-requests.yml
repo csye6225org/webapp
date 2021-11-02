@@ -13,45 +13,50 @@ jobs:
     steps:
       # 1. 
       - uses: actions/checkout@v2
-
       # 2. 
-      - name: Start of pull request workflow
+      - name: 2. Start of pull request workflow
         run: echo "Start of pull request workflow"
-
       # 3.
-      - name: List Files
+      - name: 3. List Files
         run: |
           pwd
           ls -ltrh
-
       # 4.
-      - name: Update and Upgrade Enviornment
+      - name: 4. Update and Upgrade Enviornment
         run: |
           sudo apt-get update
           sudo apt-get -qy upgrade
       # 5. 
-      # - name: Install Apache 2
-      #   run: |
-      #     sudo add-apt-repository ppa:openjdk-r/ppa
-      #     sudo apt-get install apache2 -y
-      # 6. 
-      - name: Install Java 11
+      - name: 5. Install Java 11
         run: |
           sudo apt-get install -y openjdk-11-jdk
           java -version
           export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
           export PATH=$JAVA_HOME/bin:$PATH
-      # 7. 
-      - name: Install Maven
+      # 6. 
+      - name: 6. Install Maven
         run: |
           sudo apt install maven -y
+      # 7. 
+      - name: 7. Install AWS CLI
+        run: |
+          cd ~
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
       # 8.
-      - name: Generate build
+      - name: 8. Setup AWS profile
+        run: |
+          aws configure set aws_access_key_id ${AWS_ACCESS_KEY} --profile default
+          aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} --profile default
+          aws configure set region ${AWS_REGION} --profile default
+      # 9.
+      - name: 9. Generate build
         run: |
           cd /home/runner/work/webapp/webapp/project/
           mvn clean install
-      # 9.
-      - name: Create deployment zip
+      # 10.
+      - name: 10. Create deployment_artifact.tar.gz
         run: |
           cd ~
           mkdir DeploymentFiles
@@ -60,6 +65,11 @@ jobs:
           tar -czvf deployment_artifacts.tar.gz *
           pwd
           ls -ltrh
-      # 10.
-      - name: End of pull request workflow
+      # 11.
+      - name: 11. Send deployment_artifact.tar.gz to S3 bucket 
+        run: |
+          cd ~/DeploymentFiles/
+          aws s3 cp deployment_artifact.tar.gz s3://${AWS_S3_BUCKET_FOR_DEPLOYMENT}
+      # 12.
+      - name: 12. End of pull request workflow
         run: echo "End of pull request workflow..." 
