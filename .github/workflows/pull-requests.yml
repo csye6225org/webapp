@@ -75,7 +75,7 @@ jobs:
           bucket_name: ${{ secrets.AWS_S3_BUCKET_FOR_DEPLOYMENT }}
         run: |
           cd ~/DeploymentFiles/
-          aws s3 cp deployment_artifact.tar.gz s3://"$bucket_name"
+          aws s3 cp deployment_artifact.tar.gz s3://codedeploy.dev.bucket
       # 12.
       - name: 12. End of pull request workflow
         run: echo "End of pull request workflow..." 
