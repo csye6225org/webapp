@@ -48,15 +48,14 @@ jobs:
       # 8.
       - name: Generate build
         run: |
-          cd ~
-          cd project
+          cd /home/runner/work/webapp/webapp/project/
           mvn clean install
       # 9.
       - name: Create deployment zip
         run: |
           cd ~
           mkdir DeploymentFiles
-          cp ./target/ROOT.war ~/DeploymentFiles/.
+          cp /home/runner/work/webapp/webapp/project/target/ROOT.war ~/DeploymentFiles/.
           cd ~/DeploymentFiles/
           tar -czvf deployment_artifacts.tar.gz *
       # 10.
