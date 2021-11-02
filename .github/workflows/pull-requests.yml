@@ -41,7 +41,7 @@ jobs:
       - name: 7. Install AWS CLI
         run: |
           cd ~
-          sudo apt-get install -y python-pip
+          # sudo apt-get install -y python-pip
           sudo pip install awscli
           aws --version
       # 8.
