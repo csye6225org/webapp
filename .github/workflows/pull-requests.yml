@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  validate:
+  build-and-upload:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,4 +25,4 @@ jobs:
 
       # 4.
       - name: End of pull request workflow
-        run: echo "End of pull request workflow" 
+        run: echo "End of pull request workflow..." 
