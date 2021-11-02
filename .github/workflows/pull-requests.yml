@@ -19,10 +19,46 @@ jobs:
         run: echo "Start of pull request workflow"
 
       # 3.
-      - name: Generate Artifact
+      - name: List Files
         run: |
+          pwd
           ls -ltrh
 
       # 4.
+      - name: Update and Upgrade Enviornment
+        run: |
+          sudo apt-get update
+          sudo apt-get -qy upgrade
+      # 5. 
+      - name: Install Apache 2
+        run: |
+          sudo add-apt-repository ppa:openjdk-r/ppa
+          sudo apt-get install apache2 -y
+      # 6. 
+      - name: Install Java 11
+        run: |
+          sudo apt-get install -y openjdk-11-jdk
+          java -version
+          export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+          export PATH=$JAVA_HOME/bin:$PATH
+      # 7. 
+      - name: Install Maven
+        run: |
+          sudo apt install maven -y
+      # 8.
+      - name: Generate build
+        run: |
+          cd ~
+          cd project
+          mvn clean install
+      # 9.
+      - name: Create deployment zip
+        run: |
+          cd ~
+          mkdir DeploymentFiles
+          cp ./target/ROOT.war ~/DeploymentFiles/.
+          cd ~/DeploymentFiles/
+          tar -czvf deployment_artifacts.tar.gz *
+      # 10.
       - name: End of pull request workflow
         run: echo "End of pull request workflow..." 
