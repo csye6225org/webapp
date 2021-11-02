@@ -44,16 +44,6 @@ jobs:
           sudo apt-get install -y python3-pip
           sudo pip install awscli
           aws --version
-      # 8.
-      - name: 8. Setup AWS profile
-        env:
-          region: ${{ secrets.WEBAPP_AWS_REGION }}
-          access_key: ${{ secrets.WEBAPP_AWS_ACCESS_KEY }}
-          secret_access_key: ${{ secrets.WEBAPP_AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws configure set region "$region" --profile default
-          aws configure set aws_access_key "$access_key" --profile default
-          aws configure set aws_secret_access_key "$secret_access_key" --profile default
       # 9.
       - name: 9. Generate build
         run: |
@@ -70,10 +60,16 @@ jobs:
           pwd
           ls -ltrh
       # 11.
-      - name: 11. Send deployment_artifact.tar.gz to S3 bucket
+      - name: 11. Setup AWS profile & Send deployment_artifact.tar.gz to S3 bucket
         env:
+          region: ${{ secrets.WEBAPP_AWS_REGION }}
+          access_key: ${{ secrets.WEBAPP_AWS_ACCESS_KEY }}
+          secret_access_key: ${{ secrets.WEBAPP_AWS_SECRET_ACCESS_KEY }}
           bucket_name: ${{ secrets.AWS_S3_BUCKET_FOR_DEPLOYMENT }}
         run: |
+          aws configure set region "$region" --profile default
+          aws configure set aws_access_key "$access_key" --profile default
+          aws configure set aws_secret_access_key "$secret_access_key" --profile default
           cd ~/DeploymentFiles/
           aws s3 cp deployment_artifact.tar.gz s3://"$bucket_name"
       # 12.
