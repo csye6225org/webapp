@@ -47,15 +47,9 @@ jobs:
       # 8.
       - name: 8. Setup AWS profile
         run: |
-          aws configure set aws_access_key \
-          ${AWS_ACCESS_KEY} \
-          --profile default
-          aws configure set aws_secret_access_key \
-          ${AWS_SECRET_ACCESS_KEY} \
-          --profile default
-          aws configure set region \
-          ${AWS_REGION} \
-          --profile default
+          aws configure set aws_access_key ${{ secrets.AWS_ACCESS_KEY }} --profile default
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile default
+          aws configure set region ${{ secrets.AWS_REGION }} --profile default
       # 9.
       - name: 9. Generate build
         run: |
@@ -75,7 +69,7 @@ jobs:
       - name: 11. Send deployment_artifact.tar.gz to S3 bucket 
         run: |
           cd ~/DeploymentFiles/
-          aws s3 cp deployment_artifact.tar.gz s3://${AWS_S3_BUCKET_FOR_DEPLOYMENT}
+          aws s3 cp deployment_artifact.tar.gz s3://${{ secrets.AWS_S3_BUCKET_FOR_DEPLOYMENT }}
       # 12.
       - name: 12. End of pull request workflow
         run: echo "End of pull request workflow..." 
