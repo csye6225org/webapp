@@ -47,9 +47,9 @@ jobs:
       # 8.
       - name: 8. Setup AWS profile
         run: |
-          aws configure set region us-east-1 --profile default
-          aws configure set aws_access_key ${{ secrets.AWS_ACCESS_KEY }} --profile default
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile default
+          aws configure set region=us-east-1 --profile default
+          aws configure set aws_access_key=${{ secrets.AWS_ACCESS_KEY }} --profile default
+          aws configure set aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile default
       # 9.
       - name: 9. Generate build
         run: |
