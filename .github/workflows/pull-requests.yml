@@ -1,0 +1,28 @@
+name: Pull request to Org Main
+
+on:
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 
+      - uses: actions/checkout@v2
+
+      # 2. 
+      - name: Start of pull request workflow
+        run: echo "Start of pull request workflow"
+
+      # 3.
+      - name: Generate Artifact
+        run: |
+          ls -ltrh
+
+      # 4.
+      - name: End of pull request workflow
+        run: echo "End of pull request workflow" 
