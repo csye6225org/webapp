@@ -24,37 +24,37 @@ jobs:
       # 4.
       - name: 4. Update and Upgrade Enviornment
         run: |
-          sudo apt-get update
-          sudo apt-get -qy upgrade
+          # sudo apt-get update
+          # sudo apt-get -qy upgrade
       # 5. 
       - name: 5. Install Java 11
         run: |
-          sudo apt-get install -y openjdk-11-jdk
-          java -version
-          export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-          export PATH=$JAVA_HOME/bin:$PATH
+          # sudo apt-get install -y openjdk-11-jdk
+          # java -version
+          # export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+          # export PATH=$JAVA_HOME/bin:$PATH
       # 6. 
       - name: 6. Install Maven
         run: |
-          sudo apt install maven -y
+          # sudo apt install maven -y
       # 7. 
       - name: 7. Install AWS CLI
         run: |
           cd ~
           # sudo apt-get install -y python-pip
-          sudo pip install awscli
-          aws --version
+          # sudo pip install awscli
+          # aws --version
       # 8.
       - name: 8. Setup AWS profile
         run: |
-          aws configure set region=us-east-1 --profile default
+          aws configure set region=${{ secrets.AWS_REGION }} --profile default
           aws configure set aws_access_key=${{ secrets.AWS_ACCESS_KEY }} --profile default
           aws configure set aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile default
       # 9.
       - name: 9. Generate build
         run: |
           cd /home/runner/work/webapp/webapp/project/
-          mvn clean install
+          # mvn clean install
       # 10.
       - name: 10. Create deployment_artifact.tar.gz
         run: |
