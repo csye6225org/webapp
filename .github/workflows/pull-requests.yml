@@ -51,9 +51,9 @@ jobs:
           access_key: ${{ secrets.WEBAPP_AWS_ACCESS_KEY }}
           secret_access_key: ${{ secrets.WEBAPP_AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws configure set region $region --profile default
-          aws configure set aws_access_key $access_key --profile default
-          aws configure set aws_secret_access_key $secret_access_key --profile default
+          aws configure set region "$region" --profile default
+          aws configure set aws_access_key "$access_key" --profile default
+          aws configure set aws_secret_access_key "$secret_access_key" --profile default
       # 9.
       - name: 9. Generate build
         run: |
@@ -75,7 +75,7 @@ jobs:
           bucket_name: ${{ secrets.AWS_S3_BUCKET_FOR_DEPLOYMENT }}
         run: |
           cd ~/DeploymentFiles/
-          aws s3 cp deployment_artifact.tar.gz s3://$bucket_name
+          aws s3 cp deployment_artifact.tar.gz s3://"$bucket_name"
       # 12.
       - name: 12. End of pull request workflow
         run: echo "End of pull request workflow..." 
