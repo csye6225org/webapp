@@ -42,7 +42,7 @@ jobs:
         run: |
           cd ~
           sudo apt-get install -y python3-pip
-          sudo pip install awscli
+          python -m pip install awscliv2
           aws --version
       # 9.
       - name: 9. Generate build
@@ -61,11 +61,6 @@ jobs:
           ls -ltrh
       # 11.
       - name: 11. Setup AWS profile & Send deployment_artifact.tar.gz to S3 bucket
-        env:
-          region: ${{ secrets.WEBAPP_AWS_REGION }}
-          access_key: ${{ secrets.WEBAPP_AWS_ACCESS_KEY }}
-          secret_access_key: ${{ secrets.WEBAPP_AWS_SECRET_ACCESS_KEY }}
-          bucket_name: ${{ secrets.AWS_S3_BUCKET_FOR_DEPLOYMENT }}
         run: |
           echo "this is ${{ secrets.WEBAPP_AWS_REGION }}"
           echo "this is ${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}"
