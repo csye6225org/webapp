@@ -66,9 +66,9 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.WEBAPP_AWS_SECRET_ACCESS_KEY }} --profile default
           # cd ~/DeploymentFiles/
           # touch deployment_artifacts.txt
-          ### ls -ltrh
+          ls -ltrh
           # touch ~/DeploymentFiles/deployment_artifacts.txt
-          aws s3 cp ~/DeploymentFiles/deployment_artifacts.txt s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
+          aws s3 cp ~/DeploymentFiles/deployment_artifacts.tar.gz s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
           aws s3 ls s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
       # 11.
       - name: 11. End of pull request workflow
