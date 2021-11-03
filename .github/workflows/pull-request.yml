@@ -37,7 +37,7 @@ jobs:
         run: |
           sudo apt install maven -y
       # 6.
-      - name: 6. Generate build
+      - name: 6. Run Test
         run: |
           cd /home/runner/work/webapp/webapp/project/
           mvn test
