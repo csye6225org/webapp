@@ -32,24 +32,24 @@ jobs:
           java -version
           export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
           export PATH=$JAVA_HOME/bin:$PATH
-      # 6. 
-      - name: 6. Install Maven
+      # 5. 
+      - name: 5. Install Maven
         run: |
           sudo apt install maven -y
-      # 7. 
-      - name: 7. Install AWS CLI
+      # 6. 
+      - name: 6. Install AWS CLI
         run: |
           cd ~
           sudo apt-get install -y python3-pip
           python -m pip install awscliv2
           aws --version
-      # 8.
-      - name: 8. Generate build
+      # 7.
+      - name: 7. Generate build
         run: |
           cd /home/runner/work/webapp/webapp/project/
           mvn clean install
-      # 9.
-      - name: 9. Create deployment_artifact.tar.gz
+      # 8.
+      - name: 8. Create deployment_artifact.tar.gz
         run: |
           cd ~
           mkdir DeploymentFiles
@@ -58,8 +58,8 @@ jobs:
           tar -czvf deployment_artifacts-$(date "+%Y-%m-%d-%H-%M-%S").tar.gz *
           pwd
           ls -ltrh
-      # 10.
-      - name: 10. Setup AWS profile & Send deployment_artifact.tar.gz to S3 bucket
+      # 9.
+      - name: 9. Setup AWS profile & Send deployment_artifact.tar.gz to S3 bucket
         run: |
           aws configure set region ${{ secrets.WEBAPP_AWS_REGION }} --profile default
           aws configure set aws_access_key_id ${{ secrets.WEBAPP_AWS_ACCESS_KEY }} --profile default
@@ -68,6 +68,6 @@ jobs:
           ls -ltrh
           aws s3 cp deployment_artifacts-*.tar.gz s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
           aws s3 ls s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
-      # 11.
-      - name: 11. End of build-and-upload workflow
+      # 10.
+      - name: 10. End of build-and-upload workflow
         run: echo "End of build-and-upload workflow" 
