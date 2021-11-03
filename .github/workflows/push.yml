@@ -54,8 +54,11 @@ jobs:
           cd ~
           mkdir DeploymentFiles
           cp /home/runner/work/webapp/webapp/project/target/ROOT.war ~/DeploymentFiles/.
+          cp /home/runner/work/webapp/webapp/appspec.yml ~/DeploymentFiles/.
+          cp /home/runner/work/webapp/webapp/codedeploy/* ~/DeploymentFiles/.
           cd ~/DeploymentFiles/.
-          tar -czvf deployment_artifacts-$(date "+%Y-%m-%d-%H-%M-%S").tar.gz *
+          export ARTIFACT_FILENAME=deployment_artifacts-$(date "+%Y-%m-%d-%H-%M-%S") 
+          tar -czvf ${ARTIFACT_FILENAME}.tar.gz *
           pwd
           ls -ltrh
       # 9.
