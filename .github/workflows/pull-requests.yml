@@ -61,8 +61,9 @@ jobs:
       # # 10.
       - name: 10. Setup AWS profile & Send deployment_artifact.tar.gz to S3 bucket
         run: |
-          aws configure set region ${{ secrets.WEBAPP_AWS_REGION }}
-          aws --configure default ${{ secrets.WEBAPP_AWS_ACCESS_KEY }} ${{ secrets.WEBAPP_AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.WEBAPP_AWS_REGION }} --profile default
+          aws configure set aws_access_key_id ${{ secrets.WEBAPP_AWS_ACCESS_KEY }} --profile default
+          aws configure set aws_secret_access_key ${{ secrets.WEBAPP_AWS_SECRET_ACCESS_KEY }} --profile default
           cd ~/DeploymentFiles/
           ls -ltrh
           aws s3 ls
