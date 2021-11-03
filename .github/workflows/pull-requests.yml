@@ -68,7 +68,7 @@ jobs:
           bucket_name: ${{ secrets.AWS_S3_BUCKET_FOR_DEPLOYMENT }}
         run: |
           echo "this is ${{ secrets.WEBAPP_AWS_REGION }}"
-          echo "this is ${{ secrets.AWS_S3_BUCKET_FOR_DEPLOYMENT }}"
+          echo "this is ${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}"
           aws configure set region ${{ secrets.WEBAPP_AWS_REGION }} --profile default
           aws configure set aws_access_key ${{ secrets.WEBAPP_AWS_ACCESS_KEY }} --profile default
           aws configure set aws_secret_access_key ${{ secrets.WEBAPP_AWS_SECRET_ACCESS_KEY }} --profile default
