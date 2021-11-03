@@ -20,22 +20,22 @@ jobs:
         run: |
           pwd
           ls -ltrh
-      # # 3.
-      # - name: 3. Update and Upgrade Enviornment
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get -qy upgrade
-      # # 4. 
-      # - name: 4. Install Java 11
-      #   run: |
-      #     sudo apt-get install -y openjdk-11-jdk
-      #     java -version
-      #     export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-      #     export PATH=$JAVA_HOME/bin:$PATH
-      # # 6. 
-      # - name: 6. Install Maven
-      #   run: |
-      #     sudo apt install maven -y
+      # 3.
+      - name: 3. Update and Upgrade Enviornment
+        run: |
+          sudo apt-get update
+          sudo apt-get -qy upgrade
+      # 4. 
+      - name: 4. Install Java 11
+        run: |
+          sudo apt-get install -y openjdk-11-jdk
+          java -version
+          export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+          export PATH=$JAVA_HOME/bin:$PATH
+      # 6. 
+      - name: 6. Install Maven
+        run: |
+          sudo apt install maven -y
       # 7. 
       - name: 7. Install AWS CLI
         run: |
@@ -43,22 +43,22 @@ jobs:
           sudo apt-get install -y python3-pip
           python -m pip install awscliv2
           aws --version
-      # # 8.
-      # - name: 8. Generate build
-      #   run: |
-      #     cd /home/runner/work/webapp/webapp/project/
-      #     mvn clean install
-      # # 9.
-      # - name: 9. Create deployment_artifact.tar.gz
-      #   run: |
-      #     cd ~
-      #     mkdir DeploymentFiles
-      #     cp /home/runner/work/webapp/webapp/project/target/ROOT.war ~/DeploymentFiles/.
-      #     cd ~/DeploymentFiles/
-      #     tar -czvf deployment_artifacts.tar.gz *
-      #     pwd
-      #     ls -ltrh
-      # # 10.
+      # 8.
+      - name: 8. Generate build
+        run: |
+          cd /home/runner/work/webapp/webapp/project/
+          mvn clean install
+      # 9.
+      - name: 9. Create deployment_artifact.tar.gz
+        run: |
+          cd ~
+          mkdir DeploymentFiles
+          cp /home/runner/work/webapp/webapp/project/target/ROOT.war ~/DeploymentFiles/.
+          cd ~/DeploymentFiles/
+          tar -czvf deployment_artifacts.tar.gz *
+          pwd
+          ls -ltrh
+      # 10.
       - name: 10. Setup AWS profile & Send deployment_artifact.tar.gz to S3 bucket
         run: |
           aws configure set region ${{ secrets.WEBAPP_AWS_REGION }} --profile default
