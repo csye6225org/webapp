@@ -13,8 +13,8 @@ jobs:
     steps: 
       - uses: actions/checkout@v2
       # 1. 
-      - name: 1. Start of pull request workflow
-        run: echo "Start of pull request workflow"
+      - name: 1. Start of validate workflow
+        run: echo "Start of validate workflow"
       # 2.
       - name: 2. List Files
         run: |
@@ -32,15 +32,15 @@ jobs:
           java -version
           export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
           export PATH=$JAVA_HOME/bin:$PATH
-      # 6. 
-      - name: 6. Install Maven
+      # 5. 
+      - name: 5. Install Maven
         run: |
           sudo apt install maven -y
-      # 8.
-      - name: 8. Generate build
+      # 6.
+      - name: 6. Run Test
         run: |
           cd /home/runner/work/webapp/webapp/project/
-          mvn clean install
-      # 11.
-      - name: 11. End of pull request workflow
-        run: echo "End of pull request workflow..." 
+          mvn test
+      # 7.
+      - name: 7. End of validate workflow
+        run: echo "End of validate workflow..." 
