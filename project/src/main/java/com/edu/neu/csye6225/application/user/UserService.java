@@ -25,6 +25,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public UserService() {
+    }
+
     /**
      * Get User by username.
      * This method will search through all users present in database
