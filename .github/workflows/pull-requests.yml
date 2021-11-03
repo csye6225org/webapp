@@ -68,7 +68,7 @@ jobs:
           # touch deployment_artifacts.txt
           ### ls -ltrh
           # touch ~/DeploymentFiles/deployment_artifacts.txt
-          # aws s3 cp ~/DeploymentFiles/deployment_artifacts.txt s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
+          aws s3 cp ~/DeploymentFiles/deployment_artifacts.txt s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
           aws s3 ls s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
       # 11.
       - name: 11. End of pull request workflow
