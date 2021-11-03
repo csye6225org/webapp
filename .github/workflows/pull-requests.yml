@@ -67,8 +67,8 @@ jobs:
           cd ~/DeploymentFiles/
           ls -ltrh
           aws s3 ls
-          touch deployment_artifacts.tar.gz
-          aws s3 cp ~/DeploymentFiles/deployment_artifacts.tar.gz s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
+          touch ~/DeploymentFiles/deployment_artifacts.txt
+          aws s3 cp ~/DeploymentFiles/deployment_artifacts.txt s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
       # 11.
       - name: 11. End of pull request workflow
         run: echo "End of pull request workflow..." 
