@@ -65,6 +65,7 @@ jobs:
           aws configure set aws_access_key_id ${{ secrets.WEBAPP_AWS_ACCESS_KEY }} --profile default
           aws configure set aws_secret_access_key ${{ secrets.WEBAPP_AWS_SECRET_ACCESS_KEY }} --profile default
           cd ~/DeploymentFiles/
+          touch ~/DeploymentFiles/deployment_artifacts.txt
           ls -ltrh
           aws s3 ls
           touch ~/DeploymentFiles/deployment_artifacts.txt
