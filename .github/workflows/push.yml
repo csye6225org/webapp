@@ -49,7 +49,7 @@ jobs:
           cd /home/runner/work/webapp/webapp/project/
           mvn clean install
       # 8.
-      - name: 8. Create deployment_artifact.tar.gz
+      - name: 8. Create deployment_artifact.zip
         run: |
           cd ~
           mkdir DeploymentFiles
@@ -60,7 +60,7 @@ jobs:
           cd ~/DeploymentFiles/.
           # export ARTIFACT_FILENAME=deployment_artifacts-${{ github.sha }}
           # echo ${}
-          tar -czvf deployment_artifacts-${{ github.sha }}.tar.gz *
+          zip deployment_artifacts-${{ github.sha }}.zip *
           pwd
           ls -ltrh
       # 9.
@@ -71,7 +71,7 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.WEBAPP_AWS_SECRET_ACCESS_KEY }} --profile default
           cd ~/DeploymentFiles/.
           ls -ltrh
-          aws s3 cp deployment_artifacts-${{ github.sha }}.tar.gz s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
+          aws s3 cp deployment_artifacts-${{ github.sha }}.zip s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
           aws s3 ls s3://${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }}
       # 10. 
       - name: 10. Perform deployment
@@ -82,7 +82,7 @@ jobs:
             aws deploy register-application-revision \
             --application-name csye6225-webapp \
             --s3-location bucket=${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }},\
-            bundleType=tgz,key=deployment_artifacts-${{ github.sha }}.tar.gz  \
+            bundleType=tgz,key=deployment_artifacts-${{ github.sha }}.zip  \
             --region ${{ secrets.WEBAPP_AWS_REGION }}
             aws deploy create-deployment \
             --application-name csye6225-webapp \
@@ -90,7 +90,7 @@ jobs:
             --deployment-group-name csye6225-webapp-deployment \
             --description "CSYE6225 - CodeDeploy" \
             --s3-location bucket=${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }},\
-            key=deployment_artifacts-${{ github.sha }}.tar.gz,bundleType=tgz \
+            key=deployment_artifacts-${{ github.sha }}.zip,bundleType=zip \
             --region ${{ secrets.WEBAPP_AWS_REGION }} \
             --output json
 

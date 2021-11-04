@@ -2,25 +2,17 @@ version: 0.0
 os: linux
 
 files:
-  - source: /
-    destination: /home/ubuntu
+  - source: ./project/target/ROOT.war
+    destination: /home
 
 hooks:
   ApplicationStop:
     - location: ./codedeploy/applicationStop.sh
       timeout: 180
       runas: ubuntu
-  DownloadBundle:
-    - location: ./codedeploy/downloadBuild.sh
-      timeout: 180
-      runas: ubuntu
   BeforeInstall:
     - location: ./codedeploy/beforeInstall.sh
       timeout: 180
-      runas: ubuntu
-  Install:
-    - location: ./codedeploy/install.sh
-      timeout: 3000
       runas: ubuntu
   AfterInstall:
     - location: ./codedeploy/afterInstall.sh
