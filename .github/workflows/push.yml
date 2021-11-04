@@ -58,7 +58,8 @@ jobs:
           mkdir ~/DeploymentFiles/codedeploy
           cp /home/runner/work/webapp/webapp/codedeploy/* ~/DeploymentFiles/codedeploy/.
           cd ~/DeploymentFiles/.
-          export ARTIFACT_FILENAME=deployment_artifacts-$(date "+%Y-%m-%d-%H-%M-%S") 
+          export ARTIFACT_FILENAME=deployment_artifacts-$(date "+%Y-%m-%d-%H-%M-%S")
+          echo ${}
           tar -czvf ${ARTIFACT_FILENAME}.tar.gz *
           pwd
           ls -ltrh
@@ -75,6 +76,7 @@ jobs:
       # 10. 
       - name: 10. Perform deployment
         run: |
+            echo ${ARTIFACT_FILENAME}
             pwd
             ls -ltrh
             aws deploy register-application-revision \
