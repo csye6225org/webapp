@@ -55,7 +55,8 @@ jobs:
           mkdir DeploymentFiles
           cp /home/runner/work/webapp/webapp/project/target/ROOT.war ~/DeploymentFiles/.
           cp /home/runner/work/webapp/webapp/appspec.yml ~/DeploymentFiles/.
-          cp /home/runner/work/webapp/webapp/codedeploy/* ~/DeploymentFiles/.
+          mkdir ~/DeploymentFiles/codedeploy
+          cp /home/runner/work/webapp/webapp/codedeploy/* ~/DeploymentFiles/codedeploy/.
           cd ~/DeploymentFiles/.
           export ARTIFACT_FILENAME=deployment_artifacts-$(date "+%Y-%m-%d-%H-%M-%S") 
           tar -czvf ${ARTIFACT_FILENAME}.tar.gz *
@@ -79,7 +80,7 @@ jobs:
             aws deploy register-application-revision \
             --application-name csye6225-webapp \
             --s3-location bucket=${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }},\
-            bundleType=tar.gz,key=${ARTIFACT_FILENAME}.tar.gz  \
+            bundleType=tgz,key=${ARTIFACT_FILENAME}.tar.gz  \
             --region ${{ secrets.WEBAPP_AWS_REGION }}
             aws deploy create-deployment \
             --application-name csye6225-webapp \
@@ -87,7 +88,7 @@ jobs:
             --deployment-group-name csye6225-webapp-deployment \
             --description "CSYE6225 - CodeDeploy" \
             --s3-location bucket=${{ secrets.WEBAPP_AWS_S3_BUCKET_NAME }},\
-            key=${ARTIFACT_FILENAME}.tar.gz,bundleType=tar.gz \
+            key=${ARTIFACT_FILENAME}.tar.gz,bundleType=tgz \
             --region ${{ secrets.WEBAPP_AWS_REGION }} \
             --output json
 
