@@ -3,7 +3,7 @@ os: linux
 
 files:
   - source: ./ROOT.war
-    destination: /home/.
+    destination: /home/ubuntu
 
 hooks:
   ApplicationStop:
