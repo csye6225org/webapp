@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 
 files:
-  - source: ./ROOT.war
+  - source: /
     destination: /home/ubuntu
 
 hooks:
