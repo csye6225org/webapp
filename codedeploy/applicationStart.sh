@@ -1,9 +1,3 @@
-echo "***************************************************"
-echo "APPLICATION START BEGINS"
-echo "***************************************************"
+#!/bin/bash
 
 nohup java -jar /home/ubuntu/ROOT*.war server.port=8080 > /home/ubuntu/application-execution.out 2>&1 &
-
-echo "***************************************************"
-echo "APPLICATION START ENDS"
-echo "***************************************************"
