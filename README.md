@@ -8,7 +8,7 @@
 4. Postgresql
 ```
 
-## Assignment 1: How to Demo?
+## Assignment 1: How to Demo?.
 
 ### 1. Git Demo:
 

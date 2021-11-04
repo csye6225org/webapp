@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mkdir /home/ubuntu/afterInstall
+# mkdir /home/ubuntu/afterInstall
