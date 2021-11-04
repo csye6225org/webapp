@@ -51,7 +51,7 @@ public class Picture {
 //            referencedColumnName = "id"
 ////            foreignKey = @ForeignKey(
 ////                    name = "user_picture_fk"
-////            )
+//////            )
 //    )
 //    User user;
 
