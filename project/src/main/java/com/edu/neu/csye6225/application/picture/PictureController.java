@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 @RestController
-@RequestMapping(path = "v2/user")
+@RequestMapping(path = "v1/user")
 public class PictureController {
     @Autowired
     PictureService pictureService;
