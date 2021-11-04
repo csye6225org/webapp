@@ -243,7 +243,7 @@ https://github.com/csye6225org/webapp/blob/main/.gitignore
 6. Show that MFA is enabled on every account.
 ## Thank you.
 
-## Generate executable Jar.
+## Generate executable Jar....
 
 ### 1. Correct path for Java jdk and jre
 
