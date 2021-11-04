@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mkdir /home/ubuntu/varad4
+mkdir /home/ubuntu/afterInstall
