@@ -8,7 +8,6 @@ on:
 
 jobs:
   build-and-upload:
-    if: ${{ secrets.ALLOW_BUILD_AND_DEPLOYMENT == 'yes' }}
     runs-on: ubuntu-latest
 
     steps: 
