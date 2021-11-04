@@ -56,11 +56,11 @@ jobs:
           cp /home/runner/work/webapp/webapp/project/target/ROOT.war ~/DeploymentFiles/.
           cp /home/runner/work/webapp/webapp/appspec.yml ~/DeploymentFiles/.
           mkdir ~/DeploymentFiles/codedeploy
-          cp /home/runner/work/webapp/webapp/codedeploy/* ~/DeploymentFiles/codedeploy/.
+          cp /home/runner/work/webapp/webapp/codedeploy/*.sh ~/DeploymentFiles/codedeploy/.
           cd ~/DeploymentFiles/.
           # export ARTIFACT_FILENAME=deployment_artifacts-${{ github.sha }}
           # echo ${}
-          zip deployment_artifacts-${{ github.sha }}.zip *
+          zip -r deployment_artifacts-${{ github.sha }}.zip *
           pwd
           ls -ltrh
       # 9.
