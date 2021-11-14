@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "v1/user")
+@RequestMapping(path = "v2/user")
 public class UserController {
 
     UserService userService;
