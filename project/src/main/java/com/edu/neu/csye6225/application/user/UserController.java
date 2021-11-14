@@ -23,6 +23,7 @@ import java.util.UUID;
 public class UserController {
 
     UserService userService;
+
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
@@ -49,17 +50,18 @@ public class UserController {
             return new ResponseEntity<Object>("Username is not a valid Email", HttpStatus.BAD_REQUEST);
 
         } else if (userService.checkIfUserExists(user.getUsername())) {
-            logger.error("Controller createUser: This user already Exists.");
+            logger.error("This user already Exists.");
             return new ResponseEntity<Object>("User Already Exists",HttpStatus.BAD_REQUEST);
 
         } else {
-            logger.info("Controller createUser: User entered valid data in Request body.");
+            logger.info("User entered valid data in Request body.");
             User response_user = userService.createUser(user);
+            logger.info("Created this user: "+response_user.toString());
 
-            logger.info("Controller createUser: Creating Response body for user.");
+            logger.info("Creating Response body for user.");
             Map<String, String> userDetails = userService.userResponseBody(response_user);
 
-            logger.info("Controller createUser: Returning response for createUser controller.");
+            logger.info("Returning response for createUser controller.");
             return new ResponseEntity<Object>(userDetails, HttpStatus.CREATED);
         }
     }
@@ -68,23 +70,23 @@ public class UserController {
     @GetMapping(path = "self")
     public ResponseEntity<Object> getUser(HttpServletRequest request){
 
-        logger.info("Controller getUser: Inside this controller");
-        logger.info("Controller getUser: Authenticating request header for username and password");
+        logger.info("Inside getUser controller");
+        logger.info("Authenticating request header for username and password");
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if(header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)){
-            logger.error("Controller getUser: User Credentials are incorrect.");
+            logger.error("User Credentials are incorrect.");
             return header_authentication_result;
         } else {
 
-            logger.info("Controller getUser: Authenticated header to be correct.");
+            logger.info("Authenticated header to be correct.");
             String username = header_authentication_result.getBody().toString();
 
-            logger.info("Controller getUser: Getting user by username.");
+            logger.info("Getting user by username.");
             User user = userService.getUserByUsername(username);
 
-            logger.info("Controller getUser: Returning response for getUser controller.");
-            logger.info("Controller getUser: "+user.toString());
+            logger.info("Returning response for getUser controller.");
+            logger.info("Returning user information: "+user.toString());
             return new ResponseEntity<Object>(userService.userResponseBody(user), HttpStatus.OK);
         }
 
