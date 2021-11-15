@@ -24,7 +24,7 @@ public class UserService {
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    private static final StatsDClient statsd = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
+//    private static final StatsDClient statsd = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -49,9 +49,9 @@ public class UserService {
 
         User user = new User();
 
-        statsd.recordExecutionTime("get_all_users", 25);
+//        statsd.recordExecutionTime("get_all_users", 25);
         List<User> users = userRepository.findAll();
-        statsd.recordExecutionTime("get_all_users", 25);
+//        statsd.recordExecutionTime("get_all_users", 25);
 
         logger.info("Finding user from users present in the database.");
         for(User u:users){
