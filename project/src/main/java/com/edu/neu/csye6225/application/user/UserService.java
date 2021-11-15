@@ -40,7 +40,7 @@ public class UserService {
      * @return User
      */
     public User getUserByUsername(String username){
-
+        logger.info("Inside user service method getUserByUsername");
         logger.info("Getting user by username.");
 
         User user = new User();
@@ -62,7 +62,7 @@ public class UserService {
      * @return HttpStatus
      */
     public User createUser(User user) {
-
+        logger.info("Inside user service method createUser");
         logger.info("Creating user information.");
         UUID uuid = UUID.randomUUID();
         LocalDateTime created_at = LocalDateTime.now();
@@ -86,7 +86,7 @@ public class UserService {
      * @return HttpStatus
      */
     public void updateUser(User user){
-
+        logger.info("Inside user service method updateUser");
         logger.info("Updating user information.");
         User u = getUserByUsername(user.getUsername());
 
@@ -106,6 +106,7 @@ public class UserService {
 
 
     public boolean checkIfUserExists(String username){
+        logger.info("Inside user service method checkIfUserExists");
         if(username == null){
             logger.error("Username cannot be null.");
             return false;
@@ -125,7 +126,7 @@ public class UserService {
     }
 
     public String[] getUserCredentials(String userHeader){
-
+        logger.info("Inside user service method getUserCredentials");
         logger.info("Decoding user Credentials from header");
         String[] userHeaderSplit = userHeader.split(" ");
         String decodedString;
@@ -141,7 +142,7 @@ public class UserService {
     }
 
     public Map<String, String> userResponseBody(User user){
-
+        logger.info("Inside user service method userResponseBody");
         logger.info("Creating user response body.");
         Map<String, String> userDetails = new HashMap<>();
 
@@ -158,7 +159,7 @@ public class UserService {
     }
 
     public ResponseEntity<Object> authenticateHeader(HttpServletRequest request){
-
+        logger.info("Inside user service method authenticateHeader");
         logger.info("Authenticating request header.");
         String[] user_credentials; // Array of Strings to store user credentials.
         logger.info("Getting Authorization part of request header.");
