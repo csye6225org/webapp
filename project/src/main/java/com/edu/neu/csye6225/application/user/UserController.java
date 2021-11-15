@@ -1,5 +1,7 @@
 package com.edu.neu.csye6225.application.user;
 
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +17,14 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "v2/user")
+@RequestMapping(path = "v1/user")
 public class UserController {
 
     UserService userService;
 
     Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    private static final StatsDClient statsd = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
 
     @Autowired
     public UserController(UserService userService) {
@@ -31,6 +35,8 @@ public class UserController {
     @PostMapping(produces = "application/json")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
         logger.info("Inside Controller createUser");
+        statsd.incrementCounter("createUserController");
+        statsd.incrementCounter("apiCall");
 
         if (user.getFirst_name() == null ||
                 user.getLast_name() == null ||
@@ -68,6 +74,9 @@ public class UserController {
 
         logger.info("Inside Controller getUser");
         logger.info("Authenticating request header for username and password");
+        statsd.incrementCounter("getUserController");
+        statsd.incrementCounter("apiCall");
+
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if(header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)){
@@ -93,8 +102,10 @@ public class UserController {
     public ResponseEntity<Object> updateUser(HttpServletRequest request, @RequestBody User user) {
 
         logger.info("Inside Controller updateUser");
-
         logger.info("Controller updateUser: Authenticating request header for username and password");
+        statsd.incrementCounter("updateUserController");
+        statsd.incrementCounter("apiCall");
+
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
         UUID uid = new UUID(0,0);
 
@@ -161,11 +172,6 @@ public class UserController {
                     HttpStatus.BAD_REQUEST
             );
         }
-
     }
-
-
-
-
 
 }

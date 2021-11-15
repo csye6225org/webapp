@@ -1,5 +1,7 @@
 package com.edu.neu.csye6225.application.user;
 
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,8 @@ public class UserService {
     UserRepository userRepository;
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
+
+//    private static final StatsDClient statsd = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -44,7 +48,10 @@ public class UserService {
         logger.info("Getting user by username.");
 
         User user = new User();
+
+//        statsd.recordExecutionTime("get_all_users", 25);
         List<User> users = userRepository.findAll();
+//        statsd.recordExecutionTime("get_all_users", 25);
 
         logger.info("Finding user from users present in the database.");
         for(User u:users){
