@@ -5,6 +5,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.edu.neu.csye6225.application.user.User;
 import com.edu.neu.csye6225.application.user.UserRepository;
 import com.edu.neu.csye6225.application.user.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -35,31 +37,39 @@ public class PictureService {
 
     private PictureRepository pictureRepository;
 
+    Logger logger = LoggerFactory.getLogger(PictureService.class);
+
     @Autowired
     PictureService(PictureRepository pictureRepository){
         this.pictureRepository = pictureRepository;
     }
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
+        logger.info("Converting multipart file to File");
         File convertedFile = new File(file.getOriginalFilename());
         FileOutputStream fos = new FileOutputStream(convertedFile);
         fos.write(file.getBytes());
         fos.close();
+        logger.info("Returning File");
         return convertedFile;
     }
 
     public boolean checkIfPictureExists(UUID user_id){
+        logger.info("Checking if Picture Exists");
         List<Picture> pictures_list = pictureRepository.findAll();
         for(Picture p:pictures_list){
             if(p.getUser_id().equals(user_id)){
+                logger.info("Picture found");
                 return true;
             };
         }
+        logger.warn("Picture dont exist");
         return false;
     }
 
     public String uploadPicture(MultipartFile picture, String username) {
 
+        logger.info("Uploading picture to S3 bucket");
         // Convert multipart file to file object
         File fileObject = null;
         try {
@@ -72,11 +82,12 @@ public class PictureService {
         String content_type = picture.getContentType();
         long file_size = picture.getSize();
 
-        System.out.println("content_type"+content_type+"file_size"+file_size);
+        logger.info("content_type"+content_type+"file_size"+file_size);
 
         // Get User
         User u = userService.getUserByUsername(username);
 
+        logger.info("Collecting file information");
         // from here you will get file metadata picture.get*
         String filename = "";
         if(content_type.equals("image/png")){
@@ -101,35 +112,42 @@ public class PictureService {
                 datetoday,
                 u.getId()
         );
-        System.out.println(p.toString());
+        logger.info(p.toString());
 
+        logger.info("Delete picture if it exists for user");
         if(checkIfPictureExists(u.getId())){
             deletePicture(u.getUsername());
         }
 
         // Add picture to s3 bucket
+        logger.info("Uploading picture to S3 bucket");
         s3Client.putObject(new PutObjectRequest(s3BucketName, filename, fileObject));
         fileObject.delete();
         // Add picture object to database
+        logger.info("Saving picture information to database");
         pictureRepository.save(p);
 
+        logger.info("Picture uploaded successfully");
         return filename+" uploaded successfully.";
     }
 
 
 
     public Picture getPictureByUserId(UUID user_id){
+        logger.info("Getting picture by user id");
         List<Picture> pictures_list = pictureRepository.findAll();
         for(Picture p:pictures_list){
             if(p.getUser_id().equals(user_id)){
+                logger.info("Returning retrieved picture");
                 return p;
             };
         }
+        logger.warn("Picture for user not found");
         return null;
     }
 
     public ResponseEntity<Object> deletePicture(String username){
-
+        logger.info("Deleting picture by username");
         User u = userService.getUserByUsername(username);
         UUID user_id = u.getId();
         Picture p = getPictureByUserId(user_id);
@@ -138,21 +156,27 @@ public class PictureService {
             return new ResponseEntity<>("User dont have picture", HttpStatus.NOT_FOUND);
         }
 
+        logger.info("Deleting picture from S3 Bucket.");
         s3Client.deleteObject(s3BucketName, p.getFilename());
+        logger.info("Deleting picture record from database");
         pictureRepository.deleteById(p.getId());
 
         String response_body_message = p.getFilename()+" deleted successfully";
+        logger.info("Returning response for successful deletion of picture");
         return new ResponseEntity<>(response_body_message, HttpStatus.NO_CONTENT);
     }
 
     public Map<String, String> getPictureBodyByUsername(String username) {
+        logger.info("Getting picture information by username");
         User u = userService.getUserByUsername(username);
         Picture p = getPictureByUserId(u.getId());
 
         if(p == null){
+            logger.warn("No picture was found for user");
             return null;
         }
 
+        logger.info("Creating picture information response body");
         Map<String, String> pictureDetails = new HashMap<>();
         pictureDetails.put("file_name",p.getFilename());
         pictureDetails.put("id",p.getId().toString());
@@ -160,6 +184,7 @@ public class PictureService {
         pictureDetails.put("upload_date",p.getUploaddate().toString());
         pictureDetails.put("user_id",p.getUser_id().toString());
 
+        logger.info("Returning picture information response body");
          return pictureDetails;
     }
 

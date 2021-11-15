@@ -1,10 +1,6 @@
 package com.edu.neu.csye6225.application.user;
 
-import com.edu.neu.csye6225.application.picture.Picture;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -62,21 +58,6 @@ public class User {
             columnDefinition = "TIMESTAMP"
     )
     private ZonedDateTime account_updated;
-
-    /**
-     * Connection with Picture - one to one
-     */
-//    @JsonManagedReference(value = "user_picture")
-//    @OneToOne(
-//            mappedBy = "user",
-//            orphanRemoval = true,
-//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
-//    )
-//    private Picture picture;
-
-//    public void deletePicture(){
-//        this.picture = null;
-//    }
 
     public UUID getId() {
         UUID uid = new UUID(0,0);
@@ -142,14 +123,6 @@ public class User {
 
         this.account_updated = account_updated;
     }
-
-//    public Picture getPicture() {
-//        return picture;
-//    }
-//
-//    public void setPicture(Picture picture) {
-//        this.picture = picture;
-//    }
 
     public User() {
     }
