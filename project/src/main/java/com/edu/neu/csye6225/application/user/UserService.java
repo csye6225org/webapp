@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -70,8 +68,6 @@ public class UserService {
         LocalDateTime created_at = LocalDateTime.now();
 
         ZonedDateTime created_at_zoned = created_at.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Z"));
-//		ZonedDateTime utcZoned = ldtZoned.withZoneSameInstant(ZoneId.of("Z"));
-        System.out.println(created_at_zoned);
 
         user.setId(uuid);
         user.setAccount_created(created_at_zoned);
@@ -103,7 +99,6 @@ public class UserService {
         u.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         u.setAccount_updated(updated_at_zoned);
 
-        System.out.println("2: "+u.toString());
         logger.info("Saving updated user information to database.");
         userRepository.save(u);
 
@@ -139,10 +134,6 @@ public class UserService {
         decodedString = new String(decodedBytes);
         String[] userCredentials = decodedString.split(":");
 
-//        System.out.println("UserService.getUserCredentials: userCredentials"
-//                +userCredentials[0]
-//                +"->"
-//                +userCredentials[1]);
         logger.info("Successfully decoded user credentials from header");
         logger.info("Returning user credentials decoded from header");
 
