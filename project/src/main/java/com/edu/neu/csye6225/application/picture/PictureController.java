@@ -6,6 +6,8 @@ import com.edu.neu.csye6225.application.user.User;
 import com.edu.neu.csye6225.application.user.User;
 
 import com.edu.neu.csye6225.application.user.UserService;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 @RestController
-@RequestMapping(path = "v2/user")
+@RequestMapping(path = "v1/user")
 public class PictureController {
     @Autowired
     PictureService pictureService;
@@ -36,10 +38,15 @@ public class PictureController {
 
     Logger logger = LoggerFactory.getLogger(PictureController.class);
 
+    private static final StatsDClient statsd = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
+
     @PostMapping(value = "/self/pic")
     public ResponseEntity<Object> uploadPicture(HttpServletRequest request) throws IOException {
 
         logger.info("Inside uploadPicture controller.");
+        statsd.incrementCounter("uploadPictureController");
+        statsd.incrementCounter("apiCall");
+
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
@@ -97,6 +104,9 @@ public class PictureController {
 
         logger.info("Inside deleteFile controller.");
         logger.info("Authenticating request header.");
+        statsd.incrementCounter("deleteFileController");
+        statsd.incrementCounter("apiCall");
+
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
@@ -121,6 +131,9 @@ public class PictureController {
     public ResponseEntity<Object> getPicture(HttpServletRequest request){
         logger.info("Inside getPicture controller.");
         logger.info("Authenticating user credentials from request header.");
+        statsd.incrementCounter("getPictureController");
+        statsd.incrementCounter("apiCall");
+
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
