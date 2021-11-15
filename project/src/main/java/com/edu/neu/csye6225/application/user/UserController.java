@@ -30,7 +30,7 @@ public class UserController {
 
     @PostMapping(produces = "application/json")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
-        logger.info("Controller createUser: Inside this controller");
+        logger.info("Inside Controller createUser");
 
         if (user.getFirst_name() == null ||
                 user.getLast_name() == null ||
@@ -66,7 +66,7 @@ public class UserController {
     @GetMapping(path = "self")
     public ResponseEntity<Object> getUser(HttpServletRequest request){
 
-        logger.info("Inside getUser controller");
+        logger.info("Inside Controller getUser");
         logger.info("Authenticating request header for username and password");
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
@@ -92,7 +92,7 @@ public class UserController {
     @PutMapping(path = "self")
     public ResponseEntity<Object> updateUser(HttpServletRequest request, @RequestBody User user) {
 
-        logger.info("Controller updateUser: Inside this controller");
+        logger.info("Inside Controller updateUser");
 
         logger.info("Controller updateUser: Authenticating request header for username and password");
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
