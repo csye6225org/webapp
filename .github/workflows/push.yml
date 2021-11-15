@@ -57,6 +57,7 @@ jobs:
           cp /home/runner/work/webapp/webapp/appspec.yml ~/DeploymentFiles/.
           mkdir ~/DeploymentFiles/codedeploy
           cp /home/runner/work/webapp/webapp/codedeploy/*.sh ~/DeploymentFiles/codedeploy/.
+          cp /home/runner/work/webapp/webapp/cloudwatch-config.json ~/DeploymentFiles/codedeploy/.
           cd ~/DeploymentFiles/.
           # export ARTIFACT_FILENAME=deployment_artifacts-${{ github.sha }}
           # echo ${}
