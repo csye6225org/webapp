@@ -38,26 +38,26 @@ public class PictureController {
 
     Logger logger = LoggerFactory.getLogger(PictureController.class);
 
-//    private StatsDClient statsd;
+    private StatsDClient statsd = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
     @PostMapping(value = "/self/pic")
     public ResponseEntity<Object> uploadPicture(HttpServletRequest request) throws IOException {
 
         logger.info("Inside uploadPicture controller.");
-//        statsd.incrementCounter("uploadPictureController");
-//        statsd.incrementCounter("apiCall");
+        statsd.incrementCounter("uploadPictureController");
+        statsd.incrementCounter("apiCall");
 
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
-            logger.error("Request header did not get authenticated");
+            logger.warn("Request header did not get authenticated");
             return header_authentication_result;
         } else {
             logger.info("Validating file");
             String contentType = request.getContentType();
             if(contentType == null)
             {
-                logger.error("No file was provided to upload");
+                logger.warn("No file was provided to upload");
                 return new ResponseEntity<Object>(
                         "There should be a file or atleast correct file",
                         HttpStatus.BAD_REQUEST);
@@ -104,13 +104,13 @@ public class PictureController {
 
         logger.info("Inside deleteFile controller.");
         logger.info("Authenticating request header.");
-//        statsd.incrementCounter("deleteFileController");
-//        statsd.incrementCounter("apiCall");
+        statsd.incrementCounter("deleteFileController");
+        statsd.incrementCounter("apiCall");
 
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
-            logger.error("Request header not authenticated");
+            logger.warn("Request header not authenticated");
             return header_authentication_result;
         } else {
 
@@ -131,13 +131,13 @@ public class PictureController {
     public ResponseEntity<Object> getPicture(HttpServletRequest request){
         logger.info("Inside getPicture controller.");
         logger.info("Authenticating user credentials from request header.");
-//        statsd.incrementCounter("getPictureController");
-//        statsd.incrementCounter("apiCall");
+        statsd.incrementCounter("getPictureController");
+        statsd.incrementCounter("apiCall");
 
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
-            logger.error("User credentials from request header are not authenticated.");
+            logger.warn("User credentials from request header are not authenticated.");
             return header_authentication_result;
         } else {
             logger.info("User credentials authenticated successfully. Getting picture information.");
