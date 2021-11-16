@@ -24,8 +24,7 @@ public class UserController {
 
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
-    public static final StatsDClient statsd = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
+    private StatsDClient statsd = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
     @Autowired
     public UserController(UserService userService) {
