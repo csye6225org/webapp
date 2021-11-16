@@ -43,6 +43,7 @@ public class PictureController {
     @PostMapping(value = "/self/pic")
     public ResponseEntity<Object> uploadPicture(HttpServletRequest request) throws IOException {
 
+        long start_uploadPicture_controller = System.currentTimeMillis();
         logger.info("Inside uploadPicture controller.");
         statsd.incrementCounter("uploadPictureController");
         statsd.incrementCounter("apiCall");
@@ -51,6 +52,9 @@ public class PictureController {
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
             logger.warn("Request header did not get authenticated");
+            long end_uploadPicture_controller = System.currentTimeMillis();
+            long elapsedTime = end_uploadPicture_controller - start_uploadPicture_controller;
+            statsd.recordExecutionTime("uploadPicture_controller_et", elapsedTime);
             return header_authentication_result;
         } else {
             logger.info("Validating file");
@@ -58,6 +62,9 @@ public class PictureController {
             if(contentType == null)
             {
                 logger.warn("No file was provided to upload");
+                long end_uploadPicture_controller = System.currentTimeMillis();
+                long elapsedTime = end_uploadPicture_controller - start_uploadPicture_controller;
+                statsd.recordExecutionTime("uploadPicture_controller_et", elapsedTime);
                 return new ResponseEntity<Object>(
                         "There should be a file or atleast correct file",
                         HttpStatus.BAD_REQUEST);
@@ -87,12 +94,18 @@ public class PictureController {
                 Map<String, String> responseBody = pictureService.getPictureBodyByUsername(userCredentials[0]);
 
                 logger.info("Returning response for uploaded picture");
+                long end_uploadPicture_controller = System.currentTimeMillis();
+                long elapsedTime = end_uploadPicture_controller - start_uploadPicture_controller;
+                statsd.recordExecutionTime("uploadPicture_controller_et", elapsedTime);
                 return new ResponseEntity<>(
                         responseBody,
                         HttpStatus.OK
                 );
             } else {
                 logger.warn("File sent via request is not an image.");
+                long end_uploadPicture_controller = System.currentTimeMillis();
+                long elapsedTime = end_uploadPicture_controller - start_uploadPicture_controller;
+                statsd.recordExecutionTime("uploadPicture_controller_et", elapsedTime);
                 return new ResponseEntity<Object>("File should be Image", HttpStatus.BAD_REQUEST);
             }
         }
@@ -102,6 +115,7 @@ public class PictureController {
     @DeleteMapping("/self/pic/")
     public ResponseEntity<Object> deleteFile(HttpServletRequest request) {
 
+        long start_deleteFile_controller = System.currentTimeMillis();
         logger.info("Inside deleteFile controller.");
         logger.info("Authenticating request header.");
         statsd.incrementCounter("deleteFileController");
@@ -111,6 +125,9 @@ public class PictureController {
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
             logger.warn("Request header not authenticated");
+            long end_deleteFile_controller = System.currentTimeMillis();
+            long elapsedTime = end_deleteFile_controller - start_deleteFile_controller;
+            statsd.recordExecutionTime("deleteFile_controller_et", elapsedTime);
             return header_authentication_result;
         } else {
 
@@ -123,12 +140,17 @@ public class PictureController {
             logger.info("Deleting picture from S3 bucket.");
             ResponseEntity<Object> responseEntity = pictureService.deletePicture(userCredentials[0]);
             logger.info("Picture deleted successfully. Returning response to user");
+            long end_deleteFile_controller = System.currentTimeMillis();
+            long elapsedTime = end_deleteFile_controller - start_deleteFile_controller;
+            statsd.recordExecutionTime("deleteFile_controller_et", elapsedTime);
             return responseEntity;
         }
     }
 
     @GetMapping("/self/pic/")
     public ResponseEntity<Object> getPicture(HttpServletRequest request){
+
+        long start_getPicture_controller = System.currentTimeMillis();
         logger.info("Inside getPicture controller.");
         logger.info("Authenticating user credentials from request header.");
         statsd.incrementCounter("getPictureController");
@@ -138,6 +160,9 @@ public class PictureController {
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
             logger.warn("User credentials from request header are not authenticated.");
+            long end_getPicture_controller = System.currentTimeMillis();
+            long elapsedTime = end_getPicture_controller - start_getPicture_controller;
+            statsd.recordExecutionTime("getPicture_controller_et", elapsedTime);
             return header_authentication_result;
         } else {
             logger.info("User credentials authenticated successfully. Getting picture information.");
@@ -150,10 +175,17 @@ public class PictureController {
 
             if(responseBody == null){
                 logger.warn("User dont have a picture");
+                long end_getPicture_controller = System.currentTimeMillis();
+                long elapsedTime = end_getPicture_controller - start_getPicture_controller;
+                statsd.recordExecutionTime("getPicture_controller_et", elapsedTime);
                 return new ResponseEntity<>("User dont have a picture", HttpStatus.NOT_FOUND);
             }
 
             logger.info("Returning picture information response body");
+            long end_getPicture_controller = System.currentTimeMillis();
+            long elapsedTime = end_getPicture_controller - start_getPicture_controller;
+            statsd.recordExecutionTime("getPicture_controller_et", elapsedTime);
+            
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }
     }
