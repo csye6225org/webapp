@@ -5,6 +5,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.edu.neu.csye6225.application.user.User;
 import com.edu.neu.csye6225.application.user.UserRepository;
 import com.edu.neu.csye6225.application.user.UserService;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ public class PictureService {
     private UserService userService;
 
     private PictureRepository pictureRepository;
+
+    private StatsDClient statsd = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
     Logger logger = LoggerFactory.getLogger(PictureService.class);
 
@@ -121,11 +125,22 @@ public class PictureService {
 
         // Add picture to s3 bucket
         logger.info("Uploading picture to S3 bucket");
+        long start_time_upload_picture_to_s3 = System.currentTimeMillis();
         s3Client.putObject(new PutObjectRequest(s3BucketName, filename, fileObject));
+        long end_time_upload_picture_to_s3 = System.currentTimeMillis();
+        long elapsedTime1 = end_time_upload_picture_to_s3 - start_time_upload_picture_to_s3;
+        statsd.recordExecutionTime("upload_picture_to_s3_et", elapsedTime1);
+
         fileObject.delete();
         // Add picture object to database
         logger.info("Saving picture information to database");
+
+        long start_time_save_picture_info = System.currentTimeMillis();
         pictureRepository.save(p);
+        long end_time_save_picture_info = System.currentTimeMillis();
+        long elapsedTime2 = end_time_save_picture_info - start_time_save_picture_info;
+        statsd.recordExecutionTime("save_picture_info_et", elapsedTime2);
+
 
         logger.info("Picture uploaded successfully");
         return filename+" uploaded successfully.";
@@ -135,7 +150,12 @@ public class PictureService {
 
     public Picture getPictureByUserId(UUID user_id){
         logger.info("Getting picture by user id");
+        long start_time_getall_picture_info = System.currentTimeMillis();
         List<Picture> pictures_list = pictureRepository.findAll();
+        long end_time_getall_picture_info = System.currentTimeMillis();
+        long elapsedTime = end_time_getall_picture_info - start_time_getall_picture_info;
+        statsd.recordExecutionTime("getall_picture_info_et", elapsedTime);
+
         for(Picture p:pictures_list){
             if(p.getUser_id().equals(user_id)){
                 logger.info("Returning retrieved picture");
@@ -157,9 +177,19 @@ public class PictureService {
         }
 
         logger.info("Deleting picture from S3 Bucket.");
+        long start_time_delete_picture_from_s3 = System.currentTimeMillis();
         s3Client.deleteObject(s3BucketName, p.getFilename());
+        long end_time_delete_picture_from_s3 = System.currentTimeMillis();
+        long elapsedTime1 = end_time_delete_picture_from_s3 - start_time_delete_picture_from_s3;
+        statsd.recordExecutionTime("delete_picture_from_s3_et", elapsedTime1);
+
         logger.info("Deleting picture record from database");
+        long start_time_delete_picture_info = System.currentTimeMillis();
         pictureRepository.deleteById(p.getId());
+        long end_time_delete_picture_info = System.currentTimeMillis();
+        long elapsedTime2 = end_time_delete_picture_info - start_time_delete_picture_info;
+        statsd.recordExecutionTime("delete_picture_from_s3_et", elapsedTime2);
+
 
         String response_body_message = p.getFilename()+" deleted successfully";
         logger.info("Returning response for successful deletion of picture");
