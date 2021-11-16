@@ -24,7 +24,7 @@ public class UserController {
 
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    private StatsDClient statsd;
+//    private StatsDClient statsd;
 
     @Autowired
     public UserController(UserService userService) {
@@ -35,8 +35,8 @@ public class UserController {
     @PostMapping(produces = "application/json")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
         logger.info("Inside Controller createUser");
-        statsd.incrementCounter("createUserController");
-        statsd.incrementCounter("apiCall");
+//        statsd.incrementCounter("createUserController");
+//        statsd.incrementCounter("apiCall");
 
         if (user.getFirst_name() == null ||
                 user.getLast_name() == null ||
@@ -74,8 +74,8 @@ public class UserController {
 
         logger.info("Inside Controller getUser");
         logger.info("Authenticating request header for username and password");
-        statsd.incrementCounter("getUserController");
-        statsd.incrementCounter("apiCall");
+//        statsd.incrementCounter("getUserController");
+//        statsd.incrementCounter("apiCall");
 
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
@@ -103,8 +103,8 @@ public class UserController {
 
         logger.info("Inside Controller updateUser");
         logger.info("Controller updateUser: Authenticating request header for username and password");
-        statsd.incrementCounter("updateUserController");
-        statsd.incrementCounter("apiCall");
+//        statsd.incrementCounter("updateUserController");
+//        statsd.incrementCounter("apiCall");
 
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
         UUID uid = new UUID(0,0);

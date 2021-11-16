@@ -38,14 +38,14 @@ public class PictureController {
 
     Logger logger = LoggerFactory.getLogger(PictureController.class);
 
-    private StatsDClient statsd;
+//    private StatsDClient statsd;
 
     @PostMapping(value = "/self/pic")
     public ResponseEntity<Object> uploadPicture(HttpServletRequest request) throws IOException {
 
         logger.info("Inside uploadPicture controller.");
-        statsd.incrementCounter("uploadPictureController");
-        statsd.incrementCounter("apiCall");
+//        statsd.incrementCounter("uploadPictureController");
+//        statsd.incrementCounter("apiCall");
 
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
@@ -104,8 +104,8 @@ public class PictureController {
 
         logger.info("Inside deleteFile controller.");
         logger.info("Authenticating request header.");
-        statsd.incrementCounter("deleteFileController");
-        statsd.incrementCounter("apiCall");
+//        statsd.incrementCounter("deleteFileController");
+//        statsd.incrementCounter("apiCall");
 
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
@@ -131,8 +131,8 @@ public class PictureController {
     public ResponseEntity<Object> getPicture(HttpServletRequest request){
         logger.info("Inside getPicture controller.");
         logger.info("Authenticating user credentials from request header.");
-        statsd.incrementCounter("getPictureController");
-        statsd.incrementCounter("apiCall");
+//        statsd.incrementCounter("getPictureController");
+//        statsd.incrementCounter("apiCall");
 
         ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
