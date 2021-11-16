@@ -24,7 +24,7 @@ public class UserService {
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
-//    private static final StatsDClient statsd = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
+    private StatsDClient statsd;
 
     @Autowired
     public UserService(UserRepository userRepository) {
