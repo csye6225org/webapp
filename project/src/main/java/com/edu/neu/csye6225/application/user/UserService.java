@@ -115,7 +115,7 @@ public class UserService {
     public boolean checkIfUserExists(String username){
         logger.info("Inside user service method checkIfUserExists");
         if(username == null){
-            logger.error("Username cannot be null.");
+            logger.warn("Username cannot be null.");
             return false;
         }
         logger.info("Getting all users from database.");
@@ -173,7 +173,7 @@ public class UserService {
         String userHeader = request.getHeader("Authorization");
 
         if(userHeader.endsWith("Og==")) { // When No credentials are provided.
-            logger.error("No credentials were sent in request.");
+            logger.warn("No credentials were sent in request.");
             return new ResponseEntity<Object>("No credentials sent",HttpStatus.BAD_REQUEST);
         }
         else if (userHeader!=null && userHeader.startsWith("Basic")) { // When Header is correct
@@ -181,7 +181,7 @@ public class UserService {
             user_credentials = getUserCredentials(userHeader);
         }
         else { // When authentication type is correct.
-            logger.error("Header is not correct.");
+            logger.warn("Header is not correct.");
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
 
@@ -196,10 +196,10 @@ public class UserService {
 
             if (    !encoder.matches(user_credentials[1],
                     user_from_database.getPassword())) { // When password is not correct.
-                logger.error("Invalid password is entered for authentication.");
+                logger.warn("Invalid password is entered for authentication.");
                 return new ResponseEntity<Object>("Invalid Password", HttpStatus.BAD_REQUEST);
             } else { // When everything is correct.
-                logger.error("User credentials authenticated successfully.");
+                logger.warn("User credentials authenticated successfully.");
                 return new ResponseEntity<Object>(user_from_database.getUsername(), HttpStatus.OK);
             }
         }
