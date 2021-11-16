@@ -24,7 +24,7 @@ public class UserService {
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    private StatsDClient statsd;
+    private StatsDClient statsd = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -49,9 +49,11 @@ public class UserService {
 
         User user = new User();
 
-//        statsd.recordExecutionTime("get_all_users", 25);
+        long start_time_get_all_users = System.currentTimeMillis();
         List<User> users = userRepository.findAll();
-//        statsd.recordExecutionTime("get_all_users", 25);
+        long end_time_get_all_users = System.currentTimeMillis();
+        long elapsedTime = end_time_get_all_users - start_time_get_all_users;
+        statsd.recordExecutionTime("get_all_users_et", elapsedTime);
 
         logger.info("Finding user from users present in the database.");
         for(User u:users){
@@ -83,7 +85,13 @@ public class UserService {
         user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
 
         logger.info("Saving user information to database.");
+
+        long start_time_save_user = System.currentTimeMillis();
         userRepository.save(user);
+        long end_time_save_user = System.currentTimeMillis();
+        long elapsedTime = end_time_save_user - start_time_save_user;
+        statsd.recordExecutionTime("save_user_et", elapsedTime);
+
         return user;
     }
 
