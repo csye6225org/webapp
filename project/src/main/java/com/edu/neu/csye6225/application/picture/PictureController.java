@@ -185,7 +185,7 @@ public class PictureController {
             long end_getPicture_controller = System.currentTimeMillis();
             long elapsedTime = end_getPicture_controller - start_getPicture_controller;
             statsd.recordExecutionTime("getPicture_controller_et", elapsedTime);
-            
+
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }
     }
