@@ -14,7 +14,7 @@ import java.io.IOException;
 public class HealthCheckController {
 
     @GetMapping
-    public ResponseEntity<Object> uploadPicture(HttpServletRequest request) throws IOException {
+    public ResponseEntity<Object> healthCheckController(HttpServletRequest request) throws IOException {
         return new ResponseEntity<>("Everything OK", HttpStatus.OK);
     }
 
