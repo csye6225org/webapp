@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -43,6 +44,7 @@ public class UserService {
      * @param username
      * @return User
      */
+    @Transactional(readOnly = true)
     public User getUserByUsername(String username){
         logger.info("Inside user service method getUserByUsername");
         logger.info("Getting user by username.");
@@ -50,7 +52,9 @@ public class UserService {
         User user = new User();
 
         long start_time_get_all_users = System.currentTimeMillis();
+        
         List<User> users = userRepository.findAll();
+
         long end_time_get_all_users = System.currentTimeMillis();
         long elapsedTime = end_time_get_all_users - start_time_get_all_users;
         statsd.recordExecutionTime("get_all_users_et", elapsedTime);
