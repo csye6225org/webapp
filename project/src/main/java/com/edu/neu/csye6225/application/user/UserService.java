@@ -42,6 +42,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional
+    public void saveUser(User u){
+        userRepository.save(u);
+    }
     /**
      * Get User by username.
      * This method will search through all users present in database
@@ -80,8 +84,7 @@ public class UserService {
      * @param user
      * @return HttpStatus
      */
-//    @Modifying
-    @Transactional
+
     public User createUser(User user) {
         logger.info("Inside user service method createUser");
         logger.info("Creating user information.");
@@ -99,7 +102,7 @@ public class UserService {
         logger.info("Saving user information to database.");
 
         long start_time_save_user = System.currentTimeMillis();
-        userRepository.save(user);
+        saveUser(user);
         long end_time_save_user = System.currentTimeMillis();
         long elapsedTime = end_time_save_user - start_time_save_user;
         statsd.recordExecutionTime("save_user_et", elapsedTime);
@@ -112,8 +115,7 @@ public class UserService {
      * @param user
      * @return HttpStatus
      */
-//    @Modifying
-    @Transactional
+
     public void updateUser(User user){
         logger.info("Inside user service method updateUser");
         logger.info("Updating user information.");
@@ -122,14 +124,14 @@ public class UserService {
         LocalDateTime updated_at = LocalDateTime.now();
         ZonedDateTime updated_at_zoned = updated_at.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Z"));
 
-        System.out.println("1: "+u.toString());
+//        System.out.println("1: "+u.toString());
         u.setFirst_name(user.getFirst_name());
         u.setLast_name(user.getLast_name());
         u.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         u.setAccount_updated(updated_at_zoned);
 
         logger.info("Saving updated user information to database.");
-        userRepository.save(u);
+        saveUser(u);
     }
 
 
