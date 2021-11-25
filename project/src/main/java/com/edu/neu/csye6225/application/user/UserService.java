@@ -36,6 +36,12 @@ public class UserService {
     public UserService() {
     }
 
+
+    @Transactional(readOnly = true)
+    public List<User> getUsers(){
+        return userRepository.findAll();
+    }
+
     /**
      * Get User by username.
      * This method will search through all users present in database
@@ -45,7 +51,7 @@ public class UserService {
      * @param username
      * @return User
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public User getUserByUsername(String username){
         logger.info("Inside user service method getUserByUsername");
         logger.info("Getting user by username.");
@@ -54,7 +60,7 @@ public class UserService {
 
         long start_time_get_all_users = System.currentTimeMillis();
         
-        List<User> users = userRepository.findAll();
+        List<User> users = getUsers();
 
         long end_time_get_all_users = System.currentTimeMillis();
         long elapsedTime = end_time_get_all_users - start_time_get_all_users;
@@ -129,7 +135,7 @@ public class UserService {
     }
 
 
-    @Transactional(readOnly = true)
+    @Transactional
     public boolean checkIfUserExists(String username){
         logger.info("Inside user service method checkIfUserExists");
         if(username == null){
@@ -137,7 +143,7 @@ public class UserService {
             return false;
         }
         logger.info("Getting all users from database.");
-        List<User> users = userRepository.findAll();
+        List<User> users = getUsers();
         logger.info("Going through all users to find the user.");
         for(User u:users){
 
@@ -150,7 +156,7 @@ public class UserService {
         return false;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public String[] getUserCredentials(String userHeader){
         logger.info("Inside user service method getUserCredentials");
         logger.info("Decoding user Credentials from header");
