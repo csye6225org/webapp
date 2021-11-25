@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.aws.autoconfigure.context.ContextInstanceDataAutoConfiguration;
 
 
-@SpringBootApplication(exclude = ContextInstanceDataAutoConfiguration.class)
+@SpringBootApplication
+		//(exclude = ContextInstanceDataAutoConfiguration.class)
 //		(exclude = {DataSourceAutoConfiguration.class})
 public class ProjectApplication {
 
