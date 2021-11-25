@@ -84,7 +84,6 @@ public class UserService {
      * @param user
      * @return HttpStatus
      */
-
     public User createUser(User user) {
         logger.info("Inside user service method createUser");
         logger.info("Creating user information.");
@@ -112,26 +111,27 @@ public class UserService {
 
     /**
      * Update User information
-     * @param user
+     * @param u_from_db
+     * @param new_u
      * @return HttpStatus
      */
 
-    public void updateUser(User user){
+    public void updateUser(User u_from_db, User new_u){
         logger.info("Inside user service method updateUser");
         logger.info("Updating user information.");
-        User u = getUserByUsername(user.getUsername());
+//        User u = getUserByUsername(user.getUsername());
 
         LocalDateTime updated_at = LocalDateTime.now();
         ZonedDateTime updated_at_zoned = updated_at.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Z"));
 
 //        System.out.println("1: "+u.toString());
-        u.setFirst_name(user.getFirst_name());
-        u.setLast_name(user.getLast_name());
-        u.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
-        u.setAccount_updated(updated_at_zoned);
+        u_from_db.setFirst_name(new_u.getFirst_name());
+        u_from_db.setLast_name(new_u.getLast_name());
+        u_from_db.setPassword(BCrypt.hashpw(new_u.getPassword(), BCrypt.gensalt()));
+        u_from_db.setAccount_updated(updated_at_zoned);
 
         logger.info("Saving updated user information to database.");
-        saveUser(u);
+        saveUser(u_from_db);
     }
 
 
