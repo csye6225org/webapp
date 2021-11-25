@@ -24,23 +24,23 @@ public class UserService {
 
     UserRepository userRepository;
 
+    UserReadOnlyService userReadOnlyService;
+
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private StatsDClient statsd = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserReadOnlyService userReadOnlyService) {
         this.userRepository = userRepository;
+        this.userReadOnlyService = userReadOnlyService;
     }
 
     public UserService() {
     }
 
 
-    @Transactional(readOnly = true)
-    public List<User> getUsers(){
-        return userRepository.findAll();
-    }
+
 
     @Transactional
     public void saveUser(User u){
@@ -63,7 +63,7 @@ public class UserService {
 
         long start_time_get_all_users = System.currentTimeMillis();
         
-        List<User> users = getUsers();
+        List<User> users = userReadOnlyService.getUsers();
 
         long end_time_get_all_users = System.currentTimeMillis();
         long elapsedTime = end_time_get_all_users - start_time_get_all_users;
@@ -142,7 +142,7 @@ public class UserService {
             return false;
         }
         logger.info("Getting all users from database.");
-        List<User> users = getUsers();
+        List<User> users = userReadOnlyService.getUsers();
         logger.info("Going through all users to find the user.");
         for(User u:users){
 
