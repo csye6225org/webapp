@@ -74,6 +74,7 @@ public class UserService {
      * @param user
      * @return HttpStatus
      */
+    @Transactional(readOnly = false)
     public User createUser(User user) {
         logger.info("Inside user service method createUser");
         logger.info("Creating user information.");
@@ -104,6 +105,7 @@ public class UserService {
      * @param user
      * @return HttpStatus
      */
+    @Transactional(readOnly = false)
     public void updateUser(User user){
         logger.info("Inside user service method updateUser");
         logger.info("Updating user information.");
@@ -124,6 +126,7 @@ public class UserService {
     }
 
 
+    @Transactional(readOnly = true)
     public boolean checkIfUserExists(String username){
         logger.info("Inside user service method checkIfUserExists");
         if(username == null){
@@ -144,6 +147,7 @@ public class UserService {
         return false;
     }
 
+    @Transactional(readOnly = true)
     public String[] getUserCredentials(String userHeader){
         logger.info("Inside user service method getUserCredentials");
         logger.info("Decoding user Credentials from header");
@@ -160,6 +164,7 @@ public class UserService {
         return userCredentials;
     }
 
+    @Transactional(readOnly = true)
     public Map<String, String> userResponseBody(User user){
         logger.info("Inside user service method userResponseBody");
         logger.info("Creating user response body.");
@@ -177,6 +182,7 @@ public class UserService {
         return userDetails;
     }
 
+    @Transactional(readOnly = true)
     public ResponseEntity<Object> authenticateHeader(HttpServletRequest request){
         logger.info("Inside user service method authenticateHeader");
         logger.info("Authenticating request header.");
