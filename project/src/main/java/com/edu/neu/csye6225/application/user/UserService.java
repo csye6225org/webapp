@@ -75,8 +75,8 @@ public class UserService {
      * @param user
      * @return HttpStatus
      */
-    @Modifying
-    @Transactional(readOnly = false)
+//    @Modifying
+    @Transactional
     public User createUser(User user) {
         logger.info("Inside user service method createUser");
         logger.info("Creating user information.");
@@ -107,8 +107,8 @@ public class UserService {
      * @param user
      * @return HttpStatus
      */
-    @Modifying
-    @Transactional(readOnly = false)
+//    @Modifying
+    @Transactional
     public void updateUser(User user){
         logger.info("Inside user service method updateUser");
         logger.info("Updating user information.");
