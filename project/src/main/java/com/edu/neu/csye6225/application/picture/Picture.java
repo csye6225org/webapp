@@ -42,19 +42,6 @@ public class Picture {
     )
     private LocalDate uploaddate;
 
-//    @JsonBackReference(value = "user_picture")
-//    @OneToOne(
-////            cascade = CascadeType.ALL
-//    )
-//    @JoinColumn(
-//            name = "user_id",
-//            referencedColumnName = "id"
-////            foreignKey = @ForeignKey(
-////                    name = "user_picture_fk"
-//////            )
-//    )
-//    User user;
-
     UUID user_id;
 
     public UUID getId() {
@@ -89,14 +76,6 @@ public class Picture {
         this.uploaddate = uploaddate;
     }
 
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-
     public UUID getUser_id() {
         return user_id;
     }
@@ -104,12 +83,6 @@ public class Picture {
     public void setUser_id(UUID user_id) {
         this.user_id = user_id;
     }
-
-
-//    public void deleteUser(){
-//        this.user.deletePicture();
-//        this.user = null;
-//    }
 
     public Picture(UUID id, String filename, String fileurl, LocalDate uploaddate) {
         this.id = id;
