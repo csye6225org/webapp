@@ -13,8 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.TimeZone;
 
-@SpringBootApplication
-		(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class ProjectApplication {
 
 	public static void main(String[] args) {
