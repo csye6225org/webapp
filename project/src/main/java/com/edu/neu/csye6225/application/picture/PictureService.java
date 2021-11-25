@@ -49,7 +49,7 @@ public class PictureService {
         this.pictureRepository = pictureRepository;
     }
 
-    
+
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         logger.info("Converting multipart file to File");
         File convertedFile = new File(file.getOriginalFilename());

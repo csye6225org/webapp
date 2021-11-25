@@ -51,7 +51,6 @@ public class UserService {
      * @param username
      * @return User
      */
-    @Transactional
     public User getUserByUsername(String username){
         logger.info("Inside user service method getUserByUsername");
         logger.info("Getting user by username.");
@@ -131,11 +130,9 @@ public class UserService {
 
         logger.info("Saving updated user information to database.");
         userRepository.save(u);
-
     }
 
 
-    @Transactional
     public boolean checkIfUserExists(String username){
         logger.info("Inside user service method checkIfUserExists");
         if(username == null){
@@ -156,7 +153,6 @@ public class UserService {
         return false;
     }
 
-    @Transactional
     public String[] getUserCredentials(String userHeader){
         logger.info("Inside user service method getUserCredentials");
         logger.info("Decoding user Credentials from header");
@@ -173,7 +169,7 @@ public class UserService {
         return userCredentials;
     }
 
-    @Transactional(readOnly = true)
+
     public Map<String, String> userResponseBody(User user){
         logger.info("Inside user service method userResponseBody");
         logger.info("Creating user response body.");
@@ -191,7 +187,7 @@ public class UserService {
         return userDetails;
     }
 
-    @Transactional(readOnly = true)
+
     public ResponseEntity<Object> authenticateHeader(HttpServletRequest request){
         logger.info("Inside user service method authenticateHeader");
         logger.info("Authenticating request header.");
