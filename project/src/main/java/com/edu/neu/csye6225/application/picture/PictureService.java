@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -48,6 +49,7 @@ public class PictureService {
         this.pictureRepository = pictureRepository;
     }
 
+    
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         logger.info("Converting multipart file to File");
         File convertedFile = new File(file.getOriginalFilename());
@@ -58,9 +60,15 @@ public class PictureService {
         return convertedFile;
     }
 
+    @Transactional(readOnly = true)
+    public List<Picture> getPictureInfo(){
+        return pictureRepository.findAll();
+    }
+
+    @Transactional
     public boolean checkIfPictureExists(UUID user_id){
         logger.info("Checking if Picture Exists");
-        List<Picture> pictures_list = pictureRepository.findAll();
+        List<Picture> pictures_list = getPictureInfo();
         for(Picture p:pictures_list){
             if(p.getUser_id().equals(user_id)){
                 logger.info("Picture found");
@@ -71,6 +79,7 @@ public class PictureService {
         return false;
     }
 
+    @Transactional
     public String uploadPicture(MultipartFile picture, String username) {
 
         logger.info("Uploading picture to S3 bucket");
@@ -147,11 +156,11 @@ public class PictureService {
     }
 
 
-
+    @Transactional
     public Picture getPictureByUserId(UUID user_id){
         logger.info("Getting picture by user id");
         long start_time_getall_picture_info = System.currentTimeMillis();
-        List<Picture> pictures_list = pictureRepository.findAll();
+        List<Picture> pictures_list = getPictureInfo();
         long end_time_getall_picture_info = System.currentTimeMillis();
         long elapsedTime = end_time_getall_picture_info - start_time_getall_picture_info;
         statsd.recordExecutionTime("getall_picture_info_et", elapsedTime);
@@ -166,6 +175,7 @@ public class PictureService {
         return null;
     }
 
+    @Transactional
     public ResponseEntity<Object> deletePicture(String username){
         logger.info("Deleting picture by username");
         User u = userService.getUserByUsername(username);
@@ -196,6 +206,7 @@ public class PictureService {
         return new ResponseEntity<>(response_body_message, HttpStatus.NO_CONTENT);
     }
 
+    @Transactional
     public Map<String, String> getPictureBodyByUsername(String username) {
         logger.info("Getting picture information by username");
         User u = userService.getUserByUsername(username);
