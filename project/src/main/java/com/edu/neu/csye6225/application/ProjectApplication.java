@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @SpringBootApplication
-//		(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+		(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class ProjectApplication {
 
 	public static void main(String[] args) {
