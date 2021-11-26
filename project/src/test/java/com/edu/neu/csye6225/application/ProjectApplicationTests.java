@@ -17,8 +17,9 @@ import java.util.UUID;
 @Testable
 class ProjectApplicationTests {
 
-//	UserService userService = new UserService();
+////	UserService userService = new UserService();
 	UserReadOnlyService userReadOnlyService = new UserReadOnlyService();
+
 	@Test
 	public void testUserResponseBodyCreation(){
 
