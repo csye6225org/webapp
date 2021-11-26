@@ -3,6 +3,7 @@ package com.edu.neu.csye6225.application.picture;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.edu.neu.csye6225.application.user.User;
+import com.edu.neu.csye6225.application.user.UserReadOnlyService;
 import com.edu.neu.csye6225.application.user.UserRepository;
 import com.edu.neu.csye6225.application.user.UserService;
 import com.timgroup.statsd.NonBlockingStatsDClient;
@@ -37,6 +38,9 @@ public class PictureService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserReadOnlyService userReadOnlyService;
 
     private PictureRepository pictureRepository;
 
@@ -98,7 +102,7 @@ public class PictureService {
         logger.info("content_type"+content_type+"file_size"+file_size);
 
         // Get User
-        User u = userService.getUserByUsername(username);
+        User u = userReadOnlyService.getUserByUsername(username);
 
         logger.info("Collecting file information");
         // from here you will get file metadata picture.get*
@@ -178,7 +182,7 @@ public class PictureService {
     @Transactional
     public ResponseEntity<Object> deletePicture(String username){
         logger.info("Deleting picture by username");
-        User u = userService.getUserByUsername(username);
+        User u = userReadOnlyService.getUserByUsername(username);
         UUID user_id = u.getId();
         Picture p = getPictureByUserId(user_id);
 
@@ -209,7 +213,7 @@ public class PictureService {
     @Transactional
     public Map<String, String> getPictureBodyByUsername(String username) {
         logger.info("Getting picture information by username");
-        User u = userService.getUserByUsername(username);
+        User u = userReadOnlyService.getUserByUsername(username);
         Picture p = getPictureByUserId(u.getId());
 
         if(p == null){
