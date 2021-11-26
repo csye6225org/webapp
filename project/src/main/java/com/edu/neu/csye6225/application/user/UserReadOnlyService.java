@@ -32,6 +32,9 @@ public class UserReadOnlyService {
         this.userRepository = userRepository;
     }
 
+    public UserReadOnlyService() {
+    }
+
     public List<User> getUsers(){
         return userRepository.findAll();
     }
