@@ -5,6 +5,7 @@ import com.amazonaws.util.IOUtils;
 import com.edu.neu.csye6225.application.user.User;
 import com.edu.neu.csye6225.application.user.User;
 
+import com.edu.neu.csye6225.application.user.UserReadOnlyService;
 import com.edu.neu.csye6225.application.user.UserService;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
@@ -36,6 +37,9 @@ public class PictureController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserReadOnlyService userReadOnlyService;
+
     Logger logger = LoggerFactory.getLogger(PictureController.class);
 
     private StatsDClient statsd = new NonBlockingStatsDClient("statsd", "localhost", 8125);
@@ -48,7 +52,7 @@ public class PictureController {
         statsd.incrementCounter("uploadPictureController");
         statsd.incrementCounter("apiCall");
 
-        ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
+        ResponseEntity<Object> header_authentication_result = userReadOnlyService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
             logger.warn("Request header did not get authenticated");
@@ -80,7 +84,7 @@ public class PictureController {
 
                 logger.info("Getting user credentials from header");
                 String userHeader = request.getHeader("Authorization");
-                String[] userCredentials = userService.getUserCredentials(userHeader);
+                String[] userCredentials = userReadOnlyService.getUserCredentials(userHeader);
 
                 MultipartFile pictureMPF = new MockMultipartFile(
                         name,
@@ -121,7 +125,7 @@ public class PictureController {
         statsd.incrementCounter("deleteFileController");
         statsd.incrementCounter("apiCall");
 
-        ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
+        ResponseEntity<Object> header_authentication_result = userReadOnlyService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
             logger.warn("Request header not authenticated");
@@ -135,7 +139,7 @@ public class PictureController {
             String userHeader = request.getHeader("Authorization");
 
             logger.info("Getting user credentials from header.");
-            String[] userCredentials = userService.getUserCredentials(userHeader);
+            String[] userCredentials = userReadOnlyService.getUserCredentials(userHeader);
 
             logger.info("Deleting picture from S3 bucket.");
             ResponseEntity<Object> responseEntity = pictureService.deletePicture(userCredentials[0]);
@@ -156,7 +160,7 @@ public class PictureController {
         statsd.incrementCounter("getPictureController");
         statsd.incrementCounter("apiCall");
 
-        ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
+        ResponseEntity<Object> header_authentication_result = userReadOnlyService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
             logger.warn("User credentials from request header are not authenticated.");
@@ -168,7 +172,7 @@ public class PictureController {
             logger.info("User credentials authenticated successfully. Getting picture information.");
             logger.info("Retrieve user credentials from header");
             String userHeader = request.getHeader("Authorization");
-            String[] userCredentials = userService.getUserCredentials(userHeader);
+            String[] userCredentials = userReadOnlyService.getUserCredentials(userHeader);
 
             logger.info("Generating picture information response body.");
             Map<String, String> responseBody = pictureService.getPictureBodyByUsername(userCredentials[0]);
