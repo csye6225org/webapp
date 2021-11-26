@@ -39,10 +39,7 @@ public class UserService {
     public UserService() {
     }
 
-
-
-
-    @Transactional
+    
     public void saveUser(User u){
         userRepository.save(u);
     }
