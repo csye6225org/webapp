@@ -1,6 +1,7 @@
 package com.edu.neu.csye6225.application;
 
 import com.edu.neu.csye6225.application.user.User;
+import com.edu.neu.csye6225.application.user.UserReadOnlyService;
 import com.edu.neu.csye6225.application.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.annotation.Testable;
@@ -16,8 +17,8 @@ import java.util.UUID;
 @Testable
 class ProjectApplicationTests {
 
-	UserService userService = new UserService();
-
+//	UserService userService = new UserService();
+	UserReadOnlyService userReadOnlyService = new UserReadOnlyService();
 	@Test
 	public void testUserResponseBodyCreation(){
 
@@ -47,7 +48,7 @@ class ProjectApplicationTests {
 		u.setAccount_updated(created_at_zoned);
 		u.setAccount_created(created_at_zoned);
 
-		Map<String, String> userDetailsToCheck = userService.userResponseBody(u);
+		Map<String, String> userDetailsToCheck = userReadOnlyService.userResponseBody(u);
 
 		assertEquals(userDetailsExpected, userDetailsToCheck);
 
