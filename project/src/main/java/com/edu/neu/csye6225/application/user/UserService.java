@@ -1,7 +1,6 @@
 package com.edu.neu.csye6225.application.user;
 
 import com.amazonaws.services.sns.model.PublishRequest;
-import com.sun.org.apache.xpath.internal.operations.String;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -35,7 +34,7 @@ public class UserService {
     private AmazonSNSClient amazonSNSClient;
 
     @Value("${amazonProperties.snsTopicArn}")
-    private String snsTopicArn;
+    private String snsTopicArnValue;
 
     @Autowired
     public UserService(UserRepository userRepository
@@ -106,7 +105,7 @@ public class UserService {
         message.append("CSYE6225 Webapp");
 
         PublishRequest publishRequest =
-                new PublishRequest(snsTopicArn.toString(),
+                new PublishRequest(snsTopicArnValue,
                         message.toString(),
                         "Please Verify Your Account");
 
