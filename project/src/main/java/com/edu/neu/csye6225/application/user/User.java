@@ -60,7 +60,7 @@ public class User {
     private ZonedDateTime account_updated;
 
     @Column(
-            name = "verified_on",
+            name = "verified",
             columnDefinition = "BIT"
     )
     private Boolean verified;
