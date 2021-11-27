@@ -18,9 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional(readOnly = true)
 public class UserReadOnlyService {
-
 
     UserRepository userRepository;
 
@@ -35,6 +33,7 @@ public class UserReadOnlyService {
     public UserReadOnlyService() {
     }
 
+    @Transactional(readOnly = true)
     public List<User> getUsers(){
         return userRepository.findAll();
     }
