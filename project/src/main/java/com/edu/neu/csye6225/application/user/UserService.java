@@ -20,7 +20,6 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
-@Transactional
 public class UserService {
 
     UserRepository userRepository;
