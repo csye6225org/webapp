@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -30,6 +31,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "v1/user")
+@Transactional
 public class PictureController {
     @Autowired
     PictureService pictureService;
@@ -152,6 +154,7 @@ public class PictureController {
     }
 
     @GetMapping("/self/pic/")
+    @Transactional(readOnly = true)
     public ResponseEntity<Object> getPicture(HttpServletRequest request){
 
         long start_getPicture_controller = System.currentTimeMillis();
