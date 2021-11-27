@@ -37,6 +37,7 @@ public class UserController {
 
 
     @PostMapping(produces = "application/json")
+    @Transactional
     public ResponseEntity<Object> createUser(@RequestBody User user) {
         long start_createUser_controller = System.currentTimeMillis();
         logger.info("Inside Controller createUser");
@@ -127,6 +128,7 @@ public class UserController {
 
 
     @PutMapping(path = "self")
+    @Transactional
     public ResponseEntity<Object> updateUser(HttpServletRequest request, @RequestBody User user) {
 
         long start_updateUser_controller = System.currentTimeMillis();
