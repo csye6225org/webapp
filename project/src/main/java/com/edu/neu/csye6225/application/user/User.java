@@ -61,7 +61,7 @@ public class User {
 
     @Column(
             name = "verified",
-            columnDefinition = "BIT"
+            columnDefinition = "BOOLEAN"
     )
     private Boolean verified;
 
