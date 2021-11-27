@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 //    @Query("SELECT u.username FROM User u where u.username = ?1")
 //    Boolean userExists(String username);
 
+
 }

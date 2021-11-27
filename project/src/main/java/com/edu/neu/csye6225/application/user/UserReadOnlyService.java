@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+//@Transactional
 public class UserReadOnlyService {
 
     UserRepository userRepository;
@@ -32,7 +33,6 @@ public class UserReadOnlyService {
 
     public UserReadOnlyService() {
     }
-
 
 //    @Transactional(readOnly = true)
     public List<User> getUsers(){
