@@ -59,6 +59,18 @@ public class User {
     )
     private ZonedDateTime account_updated;
 
+    @Column(
+            name = "verified_on",
+            columnDefinition = "BIT"
+    )
+    private Boolean verified;
+
+    @Column(
+            name = "verified_on",
+            columnDefinition = "TIMESTAMP"
+    )
+    private ZonedDateTime verified_on;
+
     public UUID getId() {
         UUID uid = new UUID(0,0);
         if (id == null) return uid;
@@ -102,7 +114,6 @@ public class User {
     }
 
     public ZonedDateTime getAccount_created() {
-
         ZonedDateTime zdt = ZonedDateTime.of(01,01,01,01,01,01,01,ZoneId.of("Z"));
         if(account_created == null) return zdt;
         else return account_created.withZoneSameInstant(ZoneId.of("Z"));
@@ -113,15 +124,31 @@ public class User {
     }
 
     public ZonedDateTime getAccount_updated() {
-
         ZonedDateTime zdt = ZonedDateTime.of(01,01,01,01,01,01,01,ZoneId.of("Z"));
         if(account_updated == null) return zdt;
         else return account_updated.withZoneSameInstant(ZoneId.of("Z"));
     }
 
     public void setAccount_updated(ZonedDateTime account_updated) {
-
         this.account_updated = account_updated;
+    }
+
+    public Boolean getVerified() {
+        return verified;
+    }
+
+    public void setVerified(Boolean verified) {
+        this.verified = verified;
+    }
+
+    public ZonedDateTime getVerified_on() {
+        ZonedDateTime zdt = ZonedDateTime.of(01,01,01,01,01,01,01,ZoneId.of("Z"));
+        if(verified_on == null) return zdt;
+        else return verified_on.withZoneSameInstant(ZoneId.of("Z"));
+    }
+
+    public void setVerified_on(ZonedDateTime verified_on) {
+        this.verified_on = verified_on;
     }
 
     public User() {
@@ -147,6 +174,8 @@ public class User {
                 ", username='" + this.getUsername() + '\'' +
                 ", account_created=" + this.getAccount_created() +
                 ", account_updated=" + this.getAccount_updated() +
+                ", verified=" + this.getVerified() +
+                ", verified_on=" + this.getVerified_on() +
                 '}';
     }
 }

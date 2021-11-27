@@ -34,7 +34,6 @@ public class UserReadOnlyService {
     public UserReadOnlyService() {
     }
 
-//    @Transactional(readOnly = true)
     public List<User> getUsers(){
         return userRepository.findAll();
     }

@@ -36,8 +36,8 @@ public class PictureService {
     @Autowired
     private AmazonS3 s3Client;
 
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
 
     @Autowired
     private UserReadOnlyService userReadOnlyService;
