@@ -66,8 +66,8 @@ public class UserService {
         user.setId(uuid);
         user.setAccount_created(created_at_zoned);
         user.setAccount_updated(created_at_zoned);
-
         user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+        user.setVerified(false);
 
         logger.info("Saving user information to database.");
 
