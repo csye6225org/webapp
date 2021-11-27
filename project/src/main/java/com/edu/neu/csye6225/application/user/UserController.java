@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -87,6 +88,7 @@ public class UserController {
 
 
     @GetMapping(path = "self")
+    @Transactional(readOnly = true)
     public ResponseEntity<Object> getUser(HttpServletRequest request){
         long start_getUser_controller = System.currentTimeMillis();
         logger.info("Inside Controller getUser");
