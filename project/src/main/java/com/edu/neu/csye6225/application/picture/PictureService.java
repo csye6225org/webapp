@@ -64,12 +64,12 @@ public class PictureService {
         return convertedFile;
     }
 
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
     public List<Picture> getPictureInfo(){
         return pictureRepository.findAll();
     }
 
-    @Transactional
+//    @Transactional
     public boolean checkIfPictureExists(UUID user_id){
         logger.info("Checking if Picture Exists");
         List<Picture> pictures_list = getPictureInfo();
@@ -83,7 +83,7 @@ public class PictureService {
         return false;
     }
 
-    @Transactional
+//    @Transactional
     public String uploadPicture(MultipartFile picture, String username) {
 
         logger.info("Uploading picture to S3 bucket");
@@ -160,7 +160,7 @@ public class PictureService {
     }
 
 
-    @Transactional
+//    @Transactional
     public Picture getPictureByUserId(UUID user_id){
         logger.info("Getting picture by user id");
         long start_time_getall_picture_info = System.currentTimeMillis();
@@ -179,7 +179,7 @@ public class PictureService {
         return null;
     }
 
-    @Transactional
+//    @Transactional
     public ResponseEntity<Object> deletePicture(String username){
         logger.info("Deleting picture by username");
         User u = userReadOnlyService.getUserByUsername(username);
@@ -210,7 +210,7 @@ public class PictureService {
         return new ResponseEntity<>(response_body_message, HttpStatus.NO_CONTENT);
     }
 
-    @Transactional
+//    @Transactional
     public Map<String, String> getPictureBodyByUsername(String username) {
         logger.info("Getting picture information by username");
         User u = userReadOnlyService.getUserByUsername(username);
