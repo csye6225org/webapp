@@ -1,11 +1,14 @@
 package com.edu.neu.csye6225.application.user;
 
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.sun.org.apache.xpath.internal.operations.String;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +27,20 @@ public class UserService {
 
     UserRepository userRepository;
 
-//    UserReadOnlyService userReadOnlyService;
-
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private StatsDClient statsd = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
     @Autowired
-    public UserService(UserRepository userRepository //, UserReadOnlyService userReadOnlyService
+    private AmazonSNSClient amazonSNSClient;
+
+    @Value("${amazonProperties.snsTopicArn}")
+    private String snsTopicArn;
+
+    @Autowired
+    public UserService(UserRepository userRepository
     ) {
         this.userRepository = userRepository;
-//        this.userReadOnlyService = userReadOnlyService;
     }
 
     public UserService() {
@@ -72,7 +78,39 @@ public class UserService {
         long elapsedTime = end_time_save_user - start_time_save_user;
         statsd.recordExecutionTime("save_user_et", elapsedTime);
 
+        publishSNSTopic(user);
+
         return user;
+    }
+
+    public void publishSNSTopic(User user){
+
+        UUID user_verification_token = UUID.randomUUID();
+
+        StringBuilder account_verification_link = new StringBuilder();
+        account_verification_link.append("http://prod.varaddesai.me/v1/verifyUserEmail?email=")
+                .append(user.getUsername())
+                .append("&token=")
+                .append(user_verification_token);
+
+        StringBuilder message = new StringBuilder();
+        message.append("Hello ")
+                .append(user.getFirst_name())
+                .append(" ")
+                .append(user.getLast_name())
+                .append(",");
+        message.append("\n");
+        message.append("Please verify your account using the following link:").append(" \n");
+        message.append(account_verification_link).append("\n");
+        message.append("Thank you and Best Regards,").append("\n");
+        message.append("CSYE6225 Webapp");
+
+        PublishRequest publishRequest =
+                new PublishRequest(snsTopicArn.toString(),
+                        message.toString(),
+                        "Please Verify Your Account");
+
+        amazonSNSClient.generateSNSClient().publish(publishRequest);
     }
 
     /**
@@ -81,7 +119,6 @@ public class UserService {
      * @param new_u
      * @return HttpStatus
      */
-
     public void updateUser(User u_from_db, User new_u){
         logger.info("Inside user service method updateUser");
         logger.info("Updating user information.");
