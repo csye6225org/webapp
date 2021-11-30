@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(path = "v1/verifyUserEmail")
-@Transactional()
+@Transactional
 public class UserControllerForAccountVerification {
 
     UserService userService;
@@ -29,8 +29,7 @@ public class UserControllerForAccountVerification {
     }
 
     @GetMapping
-    public ResponseEntity<Object> verifyUser(HttpServletRequest request,
-                                             @RequestBody User user,
+    public ResponseEntity<Object> verifyUser(@RequestBody User user,
                                              @RequestParam(value="email") String username,
                                              @RequestParam(value="token") String token_string) {
 
