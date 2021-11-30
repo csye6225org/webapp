@@ -1,11 +1,7 @@
 package com.edu.neu.csye6225.application.picture;
 
-import com.amazonaws.http.HttpResponse;
 import com.amazonaws.util.IOUtils;
-import com.edu.neu.csye6225.application.user.User;
-import com.edu.neu.csye6225.application.user.User;
 
-import com.edu.neu.csye6225.application.user.UserReadOnlyService;
 import com.edu.neu.csye6225.application.user.UserService;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
@@ -15,16 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -39,9 +31,6 @@ public class PictureController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    UserReadOnlyService userReadOnlyService;
-
     Logger logger = LoggerFactory.getLogger(PictureController.class);
 
     private StatsDClient statsd = new NonBlockingStatsDClient("statsd", "localhost", 8125);
@@ -54,7 +43,7 @@ public class PictureController {
         statsd.incrementCounter("uploadPictureController");
         statsd.incrementCounter("apiCall");
 
-        ResponseEntity<Object> header_authentication_result = userReadOnlyService.authenticateHeader(request);
+        ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
             logger.warn("Request header did not get authenticated");
@@ -86,7 +75,7 @@ public class PictureController {
 
                 logger.info("Getting user credentials from header");
                 String userHeader = request.getHeader("Authorization");
-                String[] userCredentials = userReadOnlyService.getUserCredentials(userHeader);
+                String[] userCredentials = userService.getUserCredentials(userHeader);
 
                 MultipartFile pictureMPF = new MockMultipartFile(
                         name,
@@ -127,7 +116,7 @@ public class PictureController {
         statsd.incrementCounter("deleteFileController");
         statsd.incrementCounter("apiCall");
 
-        ResponseEntity<Object> header_authentication_result = userReadOnlyService.authenticateHeader(request);
+        ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
             logger.warn("Request header not authenticated");
@@ -141,7 +130,7 @@ public class PictureController {
             String userHeader = request.getHeader("Authorization");
 
             logger.info("Getting user credentials from header.");
-            String[] userCredentials = userReadOnlyService.getUserCredentials(userHeader);
+            String[] userCredentials = userService.getUserCredentials(userHeader);
 
             logger.info("Deleting picture from S3 bucket.");
             ResponseEntity<Object> responseEntity = pictureService.deletePicture(userCredentials[0]);
@@ -163,7 +152,7 @@ public class PictureController {
         statsd.incrementCounter("getPictureController");
         statsd.incrementCounter("apiCall");
 
-        ResponseEntity<Object> header_authentication_result = userReadOnlyService.authenticateHeader(request);
+        ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if (header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
             logger.warn("User credentials from request header are not authenticated.");
@@ -175,7 +164,7 @@ public class PictureController {
             logger.info("User credentials authenticated successfully. Getting picture information.");
             logger.info("Retrieve user credentials from header");
             String userHeader = request.getHeader("Authorization");
-            String[] userCredentials = userReadOnlyService.getUserCredentials(userHeader);
+            String[] userCredentials = userService.getUserCredentials(userHeader);
 
             logger.info("Generating picture information response body.");
             Map<String, String> responseBody = pictureService.getPictureBodyByUsername(userCredentials[0]);
