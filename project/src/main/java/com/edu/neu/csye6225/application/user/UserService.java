@@ -90,32 +90,26 @@ public class UserService {
         UUID user_verification_token = UUID.randomUUID();
 
         StringBuilder account_verification_link = new StringBuilder();
-        account_verification_link.append("http://prod.varaddesai.me/v1/verifyUserEmail?email=")
+        account_verification_link
+                .append("<a href=\"")
+                .append("http://prod.varaddesai.me/v1/verifyUserEmail?email=")
                 .append(user.getUsername())
                 .append("&token=")
-                .append(user_verification_token);
-//
+                .append(user_verification_token)
+                .append(">Verify Here</a>");
+
         StringBuilder message = new StringBuilder();
         message.append("Hello ")
                 .append(user.getFirst_name())
                 .append(" ")
                 .append(user.getLast_name())
                 .append(",");
-        message.append("\n");
-        message.append("Please verify your account using the following link:").append(" \n");
-        message.append(account_verification_link).append("\n");
-        message.append("Thank you and Best Regards,").append("\n");
+        message.append("<br>");
+        message.append("Please verify your account using the following link:").append(" <br><br>");
+        message.append(account_verification_link).append("<br><br>");
+        message.append("Thank you and Best Regards,").append("<br>");
         message.append("CSYE6225 Webapp");
 
-//        Map<String, String> message_hm = new HashMap<>();
-//
-//
-//        message_hm.put("username", user.getUsername());
-////        message_hm.put("verification_url", account_verification_link.toString());
-//        message_hm.put("email_body", message.toString());
-//        message_hm.put("token_uuid", user_verification_token.toString());
-//
-//        JSObject message_json = new JSObject(message_hm);
 
         String jsonString = new JSONObject()
                 .put("username", user.getUsername())
