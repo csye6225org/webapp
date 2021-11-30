@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
-public class AmazonDynamoDbClient {
+public class AmazonDynamoDb {
 
     @Value("${amazonProperties.region}")
     private String awsRegion;
