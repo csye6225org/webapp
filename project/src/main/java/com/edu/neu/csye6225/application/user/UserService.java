@@ -312,6 +312,13 @@ public class UserService {
         return false;
     }
 
+    public boolean checkIfUserIsVerified(String username){
+        logger.info("Checking if user is verified");
+        User user = getUserByUsername(username);
+        logger.info("User verification status"+user.getVerified());
+        return user.getVerified();
+    }
+
     public boolean verifyUser(String username){
         User user = getUserByUsername(username);
 

@@ -27,6 +27,8 @@ class ProjectApplicationTests {
 				.atZone(ZoneId.systemDefault())
 				.withZoneSameInstant(ZoneId.of("Z"));
 
+		ZonedDateTime verified_at_zoned = ZonedDateTime.of(01,01,01,01,01,01,01,ZoneId.of("Z"));
+
 
 		Map<String, String> userDetailsExpected = new HashMap<>();
 
@@ -37,7 +39,7 @@ class ProjectApplicationTests {
 		userDetailsExpected.put("account_created", created_at_zoned.toString());
 		userDetailsExpected.put("account_updated", created_at_zoned.toString());
 		userDetailsExpected.put("verified", "false");
-		userDetailsExpected.put("verified_on",created_at_zoned.toString());
+		userDetailsExpected.put("verified_on",verified_at_zoned.toString());
 
 		User u = new User();
 
