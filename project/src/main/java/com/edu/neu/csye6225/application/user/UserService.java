@@ -320,7 +320,8 @@ public class UserService {
     }
 
     public boolean verifyUser(String username){
-        User user = getUserByUsername(username);
+
+        User user = this.getUserByUsername(username);
 
         LocalDateTime verified_at = LocalDateTime.now();
         ZonedDateTime verified_at_zoned = verified_at.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Z"));
