@@ -66,36 +66,45 @@ public class PictureController {
             }
             if(contentType.equals("image/jpeg") || contentType.equals("image/png"))
             {
-                logger.info("Retrieving image from request");
-                InputStream pictureIS = request.getInputStream();
-                byte[] pictureBA = IOUtils.toByteArray(pictureIS);
-
-                String name = "file.txt";
-                String originalFileName = "file.txt";
-
                 logger.info("Getting user credentials from header");
                 String userHeader = request.getHeader("Authorization");
                 String[] userCredentials = userService.getUserCredentials(userHeader);
 
-                MultipartFile pictureMPF = new MockMultipartFile(
-                        name,
-                        originalFileName,
-                        contentType,
-                        pictureBA
-                );
+                if(!userService.checkIfUserIsVerified(userCredentials[0])){
+                    return new ResponseEntity<Object>(
+                            "User is not verified. Please check your email and verify your account.",
+                            HttpStatus.FORBIDDEN);
+                }
 
-                logger.info("Uploading picture");
-                pictureService.uploadPicture(pictureMPF, userCredentials[0]);
-                Map<String, String> responseBody = pictureService.getPictureBodyByUsername(userCredentials[0]);
+                else {
 
-                logger.info("Returning response for uploaded picture");
-                long end_uploadPicture_controller = System.currentTimeMillis();
-                long elapsedTime = end_uploadPicture_controller - start_uploadPicture_controller;
-                statsd.recordExecutionTime("uploadPicture_controller_et", elapsedTime);
-                return new ResponseEntity<>(
-                        responseBody,
-                        HttpStatus.OK
-                );
+                    logger.info("Retrieving image from request");
+                    InputStream pictureIS = request.getInputStream();
+                    byte[] pictureBA = IOUtils.toByteArray(pictureIS);
+
+                    String name = "file.txt";
+                    String originalFileName = "file.txt";
+
+                    MultipartFile pictureMPF = new MockMultipartFile(
+                            name,
+                            originalFileName,
+                            contentType,
+                            pictureBA
+                    );
+
+                    logger.info("Uploading picture");
+                    pictureService.uploadPicture(pictureMPF, userCredentials[0]);
+                    Map<String, String> responseBody = pictureService.getPictureBodyByUsername(userCredentials[0]);
+
+                    logger.info("Returning response for uploaded picture");
+                    long end_uploadPicture_controller = System.currentTimeMillis();
+                    long elapsedTime = end_uploadPicture_controller - start_uploadPicture_controller;
+                    statsd.recordExecutionTime("uploadPicture_controller_et", elapsedTime);
+                    return new ResponseEntity<>(
+                            responseBody,
+                            HttpStatus.OK
+                    );
+                }
             } else {
                 logger.warn("File sent via request is not an image.");
                 long end_uploadPicture_controller = System.currentTimeMillis();
@@ -132,13 +141,21 @@ public class PictureController {
             logger.info("Getting user credentials from header.");
             String[] userCredentials = userService.getUserCredentials(userHeader);
 
-            logger.info("Deleting picture from S3 bucket.");
-            ResponseEntity<Object> responseEntity = pictureService.deletePicture(userCredentials[0]);
-            logger.info("Picture deleted successfully. Returning response to user");
-            long end_deleteFile_controller = System.currentTimeMillis();
-            long elapsedTime = end_deleteFile_controller - start_deleteFile_controller;
-            statsd.recordExecutionTime("deleteFile_controller_et", elapsedTime);
-            return responseEntity;
+            if(!userService.checkIfUserIsVerified(userCredentials[0])){
+                return new ResponseEntity<Object>(
+                        "User is not verified. Please check your email and verify your account.",
+                        HttpStatus.FORBIDDEN);
+            }
+
+            else {
+                logger.info("Deleting picture from S3 bucket.");
+                ResponseEntity<Object> responseEntity = pictureService.deletePicture(userCredentials[0]);
+                logger.info("Picture deleted successfully. Returning response to user");
+                long end_deleteFile_controller = System.currentTimeMillis();
+                long elapsedTime = end_deleteFile_controller - start_deleteFile_controller;
+                statsd.recordExecutionTime("deleteFile_controller_et", elapsedTime);
+                return responseEntity;
+            }
         }
     }
 
@@ -166,23 +183,31 @@ public class PictureController {
             String userHeader = request.getHeader("Authorization");
             String[] userCredentials = userService.getUserCredentials(userHeader);
 
-            logger.info("Generating picture information response body.");
-            Map<String, String> responseBody = pictureService.getPictureBodyByUsername(userCredentials[0]);
+            if(!userService.checkIfUserIsVerified(userCredentials[0])){
+                return new ResponseEntity<Object>(
+                        "User is not verified. Please check your email and verify your account.",
+                        HttpStatus.FORBIDDEN);
+            }
 
-            if(responseBody == null){
-                logger.warn("User dont have a picture");
+            else {
+                logger.info("Generating picture information response body.");
+                Map<String, String> responseBody = pictureService.getPictureBodyByUsername(userCredentials[0]);
+
+                if (responseBody == null) {
+                    logger.warn("User dont have a picture");
+                    long end_getPicture_controller = System.currentTimeMillis();
+                    long elapsedTime = end_getPicture_controller - start_getPicture_controller;
+                    statsd.recordExecutionTime("getPicture_controller_et", elapsedTime);
+                    return new ResponseEntity<>("User dont have a picture", HttpStatus.NOT_FOUND);
+                }
+
+                logger.info("Returning picture information response body");
                 long end_getPicture_controller = System.currentTimeMillis();
                 long elapsedTime = end_getPicture_controller - start_getPicture_controller;
                 statsd.recordExecutionTime("getPicture_controller_et", elapsedTime);
-                return new ResponseEntity<>("User dont have a picture", HttpStatus.NOT_FOUND);
+
+                return new ResponseEntity<>(responseBody, HttpStatus.OK);
             }
-
-            logger.info("Returning picture information response body");
-            long end_getPicture_controller = System.currentTimeMillis();
-            long elapsedTime = end_getPicture_controller - start_getPicture_controller;
-            statsd.recordExecutionTime("getPicture_controller_et", elapsedTime);
-
-            return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }
     }
 }
