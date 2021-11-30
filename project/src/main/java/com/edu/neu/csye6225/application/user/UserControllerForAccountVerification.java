@@ -29,12 +29,13 @@ public class UserControllerForAccountVerification {
     }
 
     @GetMapping
-    public ResponseEntity<Object> verifyUser(@RequestParam(value="email") String username,
-                                             @RequestParam(value="token") String token_string) {
+    public ResponseEntity<Object> verifyUser(
+            @RequestParam(value="email") String username,
+            @RequestParam(value="token") String token_string) {
 
         logger.info("Inside verify user controller");
 
-        boolean has_ttl_passed = userService.checkIfTtlHasPassed(token_string);
+//        boolean has_ttl_passed = userService.checkIfTtlHasPassed(token_string);
 
         userService.verifyUser(username);
 

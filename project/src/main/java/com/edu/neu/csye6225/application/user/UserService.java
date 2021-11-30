@@ -40,7 +40,7 @@ public class UserService {
     private AmazonSNSClient amazonSNSClient;
 
     @Autowired
-    private AmazonDynamoDbClient amazonDynamoDbClient;
+    private AmazonDynamoDb amazonDynamoDbClient;
 
     @Value("${amazonProperties.snsTopicArn}")
     private String snsTopicArnValue;
