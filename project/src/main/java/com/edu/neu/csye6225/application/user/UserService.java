@@ -157,5 +157,5 @@ public class UserService {
         logger.info("Saving updated user information to database.");
         saveUser(u_from_db);
     }
-    
+
 }
