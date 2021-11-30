@@ -225,4 +225,22 @@ public class UserController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<Object> verifyUser(HttpServletRequest request,
+            @RequestBody User user,
+            @RequestParam(value="email") String username,
+            @RequestParam(value="token") String token_string) {
+
+        boolean has_ttl_passed = userService.checkIfTtlHasPassed(token_string);
+
+        userService.verifyUser(username);
+
+        return new ResponseEntity<Object>(
+                "token = "+token_string+" username = "+username,
+                HttpStatus.OK
+        );
+
+    }
+
+
 }
