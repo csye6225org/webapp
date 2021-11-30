@@ -3,7 +3,10 @@ package com.edu.neu.csye6225.application.user;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
+import jdk.nashorn.api.scripting.JSObject;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +58,7 @@ public class UserService {
      * @param user
      * @return HttpStatus
      */
-    public User createUser(User user) {
+    public User createUser(User user) throws JSONException {
         logger.info("Inside user service method createUser");
         logger.info("Creating user information.");
         UUID uuid = UUID.randomUUID();
@@ -82,7 +85,7 @@ public class UserService {
         return user;
     }
 
-    public void publishSNSTopic(User user){
+    public void publishSNSTopic(User user) throws JSONException {
 
         UUID user_verification_token = UUID.randomUUID();
 
@@ -91,7 +94,7 @@ public class UserService {
                 .append(user.getUsername())
                 .append("&token=")
                 .append(user_verification_token);
-
+//
         StringBuilder message = new StringBuilder();
         message.append("Hello ")
                 .append(user.getFirst_name())
@@ -104,10 +107,29 @@ public class UserService {
         message.append("Thank you and Best Regards,").append("\n");
         message.append("CSYE6225 Webapp");
 
+//        Map<String, String> message_hm = new HashMap<>();
+//
+//
+//        message_hm.put("username", user.getUsername());
+////        message_hm.put("verification_url", account_verification_link.toString());
+//        message_hm.put("email_body", message.toString());
+//        message_hm.put("token_uuid", user_verification_token.toString());
+//
+//        JSObject message_json = new JSObject(message_hm);
+
+        String jsonString = new JSONObject()
+                .put("username", user.getUsername())
+                .put("email_body", message.toString())
+                .put("token_uuid", user_verification_token.toString())
+                .toString();
+
+        System.out.println(jsonString);
+
         PublishRequest publishRequest =
                 new PublishRequest(snsTopicArnValue,
-                        message.toString(),
-                        "Please Verify Your Account");
+//                        message.toString(),
+                        jsonString,
+                        "PublishRequest");
 
         amazonSNSClient.generateSNSClient().publish(publishRequest);
     }
@@ -135,10 +157,5 @@ public class UserService {
         logger.info("Saving updated user information to database.");
         saveUser(u_from_db);
     }
-
-
-
-
-
 
 }

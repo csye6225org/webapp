@@ -2,6 +2,7 @@ package com.edu.neu.csye6225.application.user;
 
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class UserController {
 
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<Object> createUser(@RequestBody User user) {
+    public ResponseEntity<Object> createUser(@RequestBody User user) throws JSONException {
         long start_createUser_controller = System.currentTimeMillis();
         logger.info("Inside Controller createUser");
         statsd.incrementCounter("createUserController");
