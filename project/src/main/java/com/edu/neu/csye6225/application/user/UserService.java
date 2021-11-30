@@ -1,5 +1,8 @@
 package com.edu.neu.csye6225.application.user;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
@@ -14,6 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.*;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -33,8 +39,14 @@ public class UserService {
     @Autowired
     private AmazonSNSClient amazonSNSClient;
 
+    @Autowired
+    private AmazonDynamoDbClient amazonDynamoDbClient;
+
     @Value("${amazonProperties.snsTopicArn}")
     private String snsTopicArnValue;
+
+    @Value("${amazonDynamodb.tableName}")
+    String dynamodb_tablename;
 
     @Autowired
     public UserService(UserRepository userRepository
@@ -103,7 +115,7 @@ public class UserService {
         message.append("Please verify your account using the following link:").append(" <br>");
         message.append(account_verification_link).append("<br><br>");
         message.append("Thank you and Best Regards,").append("<br>");
-        message.append("CSYE6225 Webapp");
+        message.append("Webapp Csye6225");
 
 
         String jsonString = new JSONObject()
@@ -115,10 +127,11 @@ public class UserService {
         System.out.println(jsonString);
 
         PublishRequest publishRequest =
-                new PublishRequest(snsTopicArnValue,
-//                        message.toString(),
+                new PublishRequest(
+                        snsTopicArnValue,
                         jsonString,
-                        "PublishRequest");
+                        "PublishRequest"
+                );
 
         amazonSNSClient.generateSNSClient().publish(publishRequest);
     }
@@ -158,6 +171,8 @@ public class UserService {
         userDetails.put("emailId", user.getUsername());
         userDetails.put("account_created", user.getAccount_created().toString());
         userDetails.put("account_updated", user.getAccount_updated().toString());
+        userDetails.put("verified", user.getVerified().toString());
+        userDetails.put("verified_on",user.getVerified_on().toString());
 
         logger.info("User response body successfully generated.");
         logger.info("Returning user response body.");
@@ -277,5 +292,45 @@ public class UserService {
         }
     }
 
+    public boolean checkIfTtlHasPassed(String token){
+
+        DynamoDB dynamoDB = new DynamoDB((AmazonDynamoDB) amazonDynamoDbClient);
+        Table table = dynamoDB.getTable(dynamodb_tablename);
+
+        GetItemSpec spec = new GetItemSpec().withPrimaryKey("id", token);
+
+        try {
+            logger.info("Attempting to read the item...");
+            Item outcome = table.getItem(spec);
+            logger.info("GetItem succeeded: " + outcome);
+        }
+        catch (Exception e) {
+            logger.error("Unable to read item: " + token);
+            logger.error(e.getMessage());
+        }
+
+        return false;
+    }
+
+    public boolean checkIfUserIsVerified(String username){
+        logger.info("Checking if user is verified");
+        User user = getUserByUsername(username);
+        logger.info("User verification status"+user.getVerified());
+        return user.getVerified();
+    }
+
+    public boolean verifyUser(String username){
+        User user = getUserByUsername(username);
+
+        LocalDateTime verified_at = LocalDateTime.now();
+        ZonedDateTime verified_at_zoned = verified_at.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Z"));
+
+        user.setVerified(true);
+        user.setVerified_on(verified_at_zoned);
+
+        saveUser(user);
+
+        return true;
+    }
 
 }
