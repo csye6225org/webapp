@@ -327,6 +327,9 @@ public class UserService {
 
         user.setVerified(true);
         user.setVerified_on(verified_at_zoned);
+        user.setAccount_updated(verified_at_zoned);
+
+        logger.info(user.toString());
 
         saveUser(user);
 
