@@ -239,7 +239,6 @@ public class UserController {
                 "token = "+token_string+" username = "+username,
                 HttpStatus.OK
         );
-
     }
 
 

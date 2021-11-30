@@ -36,6 +36,8 @@ class ProjectApplicationTests {
 		userDetailsExpected.put("emailId", "fname.lname@gmail.com");
 		userDetailsExpected.put("account_created", created_at_zoned.toString());
 		userDetailsExpected.put("account_updated", created_at_zoned.toString());
+		userDetailsExpected.put("verified", "false");
+		userDetailsExpected.put("verified_on",created_at_zoned.toString());
 
 		User u = new User();
 
