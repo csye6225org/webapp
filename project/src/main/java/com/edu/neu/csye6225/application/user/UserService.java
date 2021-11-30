@@ -91,12 +91,10 @@ public class UserService {
 
         StringBuilder account_verification_link = new StringBuilder();
         account_verification_link
-                .append("<a href=\"")
                 .append("http://prod.varaddesai.me/v1/verifyUserEmail?email=")
                 .append(user.getUsername())
                 .append("&token=")
-                .append(user_verification_token)
-                .append(">Verify Here</a>");
+                .append(user_verification_token);
 
         StringBuilder message = new StringBuilder();
         message.append("Hello ")
