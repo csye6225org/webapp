@@ -114,13 +114,21 @@ public class UserController {
             logger.info("Getting user by username.");
             User user = userService.getUserByUsername(username);
 
-            logger.info("Returning response for getUser controller.");
-            logger.info("Returning user information: "+user.toString());
-            long end_getUser_controller = System.currentTimeMillis();
-            long elapsedTime = end_getUser_controller - start_getUser_controller;
-            statsd.recordExecutionTime("getUser_controller_et", elapsedTime);
+            if(!userService.checkIfUserIsVerified(user.getUsername())){
+                return new ResponseEntity<Object>(
+                        "User is not verified. Please check your email and verify your account.",
+                        HttpStatus.FORBIDDEN);
+            }
 
-            return new ResponseEntity<Object>(userService.userResponseBody(user), HttpStatus.OK);
+            else {
+                logger.info("Returning response for getUser controller.");
+                logger.info("Returning user information: " + user.toString());
+                long end_getUser_controller = System.currentTimeMillis();
+                long elapsedTime = end_getUser_controller - start_getUser_controller;
+                statsd.recordExecutionTime("getUser_controller_et", elapsedTime);
+
+                return new ResponseEntity<Object>(userService.userResponseBody(user), HttpStatus.OK);
+            }
         }
 
     }
@@ -198,18 +206,26 @@ public class UserController {
 
                 User u = userService.getUserByUsername(user.getUsername());
 
+                if(!userService.checkIfUserIsVerified(user.getUsername())){
+                    return new ResponseEntity<Object>(
+                            "User is not verified. Please check your email and verify your account.",
+                            HttpStatus.FORBIDDEN);
+                }
 
-                userService.updateUser(u, user);
+                else {
 
-                logger.info("Controller updateUser: User information updated successfully.");
-                logger.info("Controller updateUser: Returning updated user information.");
-                long end_updateUser_controller = System.currentTimeMillis();
-                long elapsedTime = end_updateUser_controller - start_updateUser_controller;
-                statsd.recordExecutionTime("updateUser_controller_et", elapsedTime);
-                return new ResponseEntity<Object>(
-                        userService.userResponseBody(userService.getUserByUsername(username)),
-                        HttpStatus.OK
-                );
+                    userService.updateUser(u, user);
+
+                    logger.info("Controller updateUser: User information updated successfully.");
+                    logger.info("Controller updateUser: Returning updated user information.");
+                    long end_updateUser_controller = System.currentTimeMillis();
+                    long elapsedTime = end_updateUser_controller - start_updateUser_controller;
+                    statsd.recordExecutionTime("updateUser_controller_et", elapsedTime);
+                    return new ResponseEntity<Object>(
+                            userService.userResponseBody(userService.getUserByUsername(username)),
+                            HttpStatus.OK
+                    );
+                }
             }
         }
         else {
