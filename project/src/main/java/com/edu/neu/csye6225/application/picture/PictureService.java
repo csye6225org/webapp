@@ -3,8 +3,6 @@ package com.edu.neu.csye6225.application.picture;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.edu.neu.csye6225.application.user.User;
-import com.edu.neu.csye6225.application.user.UserReadOnlyService;
-import com.edu.neu.csye6225.application.user.UserRepository;
 import com.edu.neu.csye6225.application.user.UserService;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -36,11 +33,8 @@ public class PictureService {
     @Autowired
     private AmazonS3 s3Client;
 
-//    @Autowired
-//    private UserService userService;
-
     @Autowired
-    private UserReadOnlyService userReadOnlyService;
+    private UserService userService;
 
     private PictureRepository pictureRepository;
 
@@ -64,12 +58,10 @@ public class PictureService {
         return convertedFile;
     }
 
-//    @Transactional(readOnly = true)
     public List<Picture> getPictureInfo(){
         return pictureRepository.findAll();
     }
 
-//    @Transactional
     public boolean checkIfPictureExists(UUID user_id){
         logger.info("Checking if Picture Exists");
         List<Picture> pictures_list = getPictureInfo();
@@ -83,7 +75,6 @@ public class PictureService {
         return false;
     }
 
-//    @Transactional
     public String uploadPicture(MultipartFile picture, String username) {
 
         logger.info("Uploading picture to S3 bucket");
@@ -102,7 +93,7 @@ public class PictureService {
         logger.info("content_type"+content_type+"file_size"+file_size);
 
         // Get User
-        User u = userReadOnlyService.getUserByUsername(username);
+        User u = userService.getUserByUsername(username);
 
         logger.info("Collecting file information");
         // from here you will get file metadata picture.get*
@@ -160,7 +151,6 @@ public class PictureService {
     }
 
 
-//    @Transactional
     public Picture getPictureByUserId(UUID user_id){
         logger.info("Getting picture by user id");
         long start_time_getall_picture_info = System.currentTimeMillis();
@@ -179,10 +169,9 @@ public class PictureService {
         return null;
     }
 
-//    @Transactional
     public ResponseEntity<Object> deletePicture(String username){
         logger.info("Deleting picture by username");
-        User u = userReadOnlyService.getUserByUsername(username);
+        User u = userService.getUserByUsername(username);
         UUID user_id = u.getId();
         Picture p = getPictureByUserId(user_id);
 
@@ -210,10 +199,9 @@ public class PictureService {
         return new ResponseEntity<>(response_body_message, HttpStatus.NO_CONTENT);
     }
 
-//    @Transactional
     public Map<String, String> getPictureBodyByUsername(String username) {
         logger.info("Getting picture information by username");
-        User u = userReadOnlyService.getUserByUsername(username);
+        User u = userService.getUserByUsername(username);
         Picture p = getPictureByUserId(u.getId());
 
         if(p == null){

@@ -25,16 +25,14 @@ import java.util.UUID;
 public class UserController {
 
     UserService userService;
-    UserReadOnlyService userReadOnlyService;
 
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private StatsDClient statsd = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
     @Autowired
-    public UserController(UserService userService, UserReadOnlyService userReadOnlyService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userReadOnlyService = userReadOnlyService;
     }
 
 
@@ -65,7 +63,7 @@ public class UserController {
             statsd.recordExecutionTime("createUser_controller_et", elapsedTime);
             return new ResponseEntity<Object>("Username is not a valid Email", HttpStatus.BAD_REQUEST);
 
-        } else if (userReadOnlyService.checkIfUserExists(user.getUsername())) {
+        } else if (userService.checkIfUserExists(user.getUsername())) {
             logger.error("This user already Exists.");
             long end_createUser_controller = System.currentTimeMillis();
             long elapsedTime = end_createUser_controller - start_createUser_controller;
@@ -78,7 +76,7 @@ public class UserController {
             logger.info("Created this user: "+response_user.toString());
 
             logger.info("Creating Response body for user.");
-            Map<String, String> userDetails = userReadOnlyService.userResponseBody(response_user);
+            Map<String, String> userDetails = userService.userResponseBody(response_user);
 
             logger.info("Returning response for createUser controller.");
             long end_createUser_controller = System.currentTimeMillis();
@@ -98,7 +96,7 @@ public class UserController {
         statsd.incrementCounter("getUserController");
         statsd.incrementCounter("apiCall");
 
-        ResponseEntity<Object> header_authentication_result = userReadOnlyService.authenticateHeader(request);
+        ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
 
         if(header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)){
 
@@ -114,7 +112,7 @@ public class UserController {
             String username = header_authentication_result.getBody().toString();
 
             logger.info("Getting user by username.");
-            User user = userReadOnlyService.getUserByUsername(username);
+            User user = userService.getUserByUsername(username);
 
             logger.info("Returning response for getUser controller.");
             logger.info("Returning user information: "+user.toString());
@@ -122,7 +120,7 @@ public class UserController {
             long elapsedTime = end_getUser_controller - start_getUser_controller;
             statsd.recordExecutionTime("getUser_controller_et", elapsedTime);
 
-            return new ResponseEntity<Object>(userReadOnlyService.userResponseBody(user), HttpStatus.OK);
+            return new ResponseEntity<Object>(userService.userResponseBody(user), HttpStatus.OK);
         }
 
     }
@@ -137,7 +135,7 @@ public class UserController {
         statsd.incrementCounter("updateUserController");
         statsd.incrementCounter("apiCall");
 
-        ResponseEntity<Object> header_authentication_result = userReadOnlyService.authenticateHeader(request);
+        ResponseEntity<Object> header_authentication_result = userService.authenticateHeader(request);
         UUID uid = new UUID(0,0);
 
         if(header_authentication_result.getStatusCode().equals(HttpStatus.BAD_REQUEST)){
@@ -147,7 +145,7 @@ public class UserController {
             statsd.recordExecutionTime("updateUser_controller_et", elapsedTime);
             return header_authentication_result;
 
-        } else if(!userReadOnlyService.checkIfUserExists(user.getUsername())){
+        } else if(!userService.checkIfUserExists(user.getUsername())){
             // When username in JSON of Request payload is changed
             logger.error("Controller updateUser: User tried to change username.");
             long end_updateUser_controller = System.currentTimeMillis();
@@ -198,7 +196,7 @@ public class UserController {
             } else {
                 logger.info("Controller updateUser: Updating user information.");
 
-                User u = userReadOnlyService.getUserByUsername(user.getUsername());
+                User u = userService.getUserByUsername(user.getUsername());
 
 
                 userService.updateUser(u, user);
@@ -209,7 +207,7 @@ public class UserController {
                 long elapsedTime = end_updateUser_controller - start_updateUser_controller;
                 statsd.recordExecutionTime("updateUser_controller_et", elapsedTime);
                 return new ResponseEntity<Object>(
-                        userReadOnlyService.userResponseBody(userReadOnlyService.getUserByUsername(username)),
+                        userService.userResponseBody(userService.getUserByUsername(username)),
                         HttpStatus.OK
                 );
             }
