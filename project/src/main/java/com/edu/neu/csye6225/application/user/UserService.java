@@ -1,10 +1,6 @@
 package com.edu.neu.csye6225.application.user;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.GetItemResult;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
@@ -19,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.*;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 
@@ -322,16 +317,12 @@ public class UserService {
 
         logger.info("diff_in_minutes"+diff_in_minutes);
 
-        if(diff_in_minutes < 0){
+        if(diff_in_minutes < ttl_expiration_time){
             return true;
         } else {
             return false;
         }
 
-//        System.out.println("diff ==> "+ diff);
-//        System.out.println("Time difference =>"+ TimeUnit.MILLISECONDS.toMinutes(diff));
-//
-//        return true;
     }
 
     public boolean checkIfUserIsVerified(String username){
