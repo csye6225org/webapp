@@ -3,6 +3,8 @@ package com.edu.neu.csye6225.application.user;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.GetItemResult;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
@@ -39,7 +41,7 @@ public class UserService {
     @Autowired
     private AmazonSNSClient amazonSNSClient;
 
-//    @Autowired
+    @Autowired
     private AmazonDynamoDbClient amazonDynamoDbClient;
 
     @Value("${amazonProperties.snsTopicArn}")
@@ -296,8 +298,18 @@ public class UserService {
 
         logger.info("token = "+token);
 
-        Item item = amazonDynamoDbClient.get_item(token);
-        logger.info("this is item from dynamodb ->"+item.toJSON());
+
+        Map<String, AttributeValue> map = new HashMap<>();
+        map.put("username", new AttributeValue("varadds859@gmail.com"));
+
+        GetItemResult item_from_dynamodb = amazonDynamoDbClient.generateDynamodbClient().getItem("id",map);
+        Map<String, AttributeValue> item_map = item_from_dynamodb.getItem();
+        logger.info("Result ==> username: "+item_map.get("username"));
+        logger.info("Result ==> id: "+item_map.get("id"));
+        logger.info("Result ==> ttl: "+item_map.get("ttl"));
+
+//        Item item = amazonDynamoDbClient.get_item(token);
+//        logger.info("this is item from dynamodb ->"+item.toJSON());
 
         return true;
     }
