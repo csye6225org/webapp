@@ -26,65 +26,83 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+@Configuration
 public class AmazonDynamoDbClient {
 
-    @Value("${amazonDynamodb.serviceEndpoint}")
-    private String dynamodb_service_endpoint;
+//    @Value("${amazonDynamodb.serviceEndpoint}")
+//    private String dynamodb_service_endpoint;
+//
+//    @Value("${amazonDynamodb.tableName}")
+//    String dynamodb_tablename;
 
-    @Value("${amazonDynamodb.tableName}")
-    String dynamodb_tablename;
+     @Value("${amazonProperties.region}")
+     private String awsRegion;
 
-    @Value("${amazonProperties.region}")
-    private String awsRegion;
+     @Primary
+     @Bean
+     AmazonDynamoDB generateDynamodbClient() {
+//        @Deprecated
+//        AmazonDynamoDB client = new AmazonDynamoDBClient(new DefaultAWSCredentialsProviderChain())
+//                .setEndpoint("https://dynamodb.us-east-1.amazonaws.com");
 
-    Logger logger;
-    AmazonDynamoDB client;
-    DynamoDB dynamoDB;
-//    @Deprecated
-//    AmazonDynamoDB client2 = new AmazonDynamoDBClient(new DefaultAWSCredentialsProviderChain());
+//        @Deprecated
+//        client.setEndpoint();
 
-    Table table;
-    Item outcome;
-
-    public AmazonDynamoDbClient() {
-        this.client = AmazonDynamoDBClientBuilder.standard()
-                .withEndpointConfiguration(
-                        new AwsClientBuilder.EndpointConfiguration(dynamodb_service_endpoint, awsRegion)
-                )
+//        return client;
+        return AmazonDynamoDBClientBuilder
+                .standard()
+                .withRegion(awsRegion)
                 .build();
-        this.dynamoDB = new DynamoDB(client);
-        this.logger = LoggerFactory.getLogger(AmazonDynamoDbClient.class);
-        this.table = dynamoDB.getTable(dynamodb_tablename);
     }
-
-    public Item get_item(String token){
-        GetItemSpec spec = new GetItemSpec().withPrimaryKey("id", token);
-        try {
-            logger.info("Attempting to read the item...");
-            outcome = table.getItem(spec);
-            logger.info("GetItem succeeded: " + outcome);
-
-        }
-        catch (Exception e) {
-            logger.error("Unable to read item: " + token);
-            logger.error(e.getMessage());
-        }
-
-        return outcome;
-    }
-    //
+//    Logger logger;
+//    AmazonDynamoDB client;
+//    DynamoDB dynamoDB;
+////    @Deprecated
+////    AmazonDynamoDB client2 = new AmazonDynamoDBClient(new DefaultAWSCredentialsProviderChain());
+//
+//    Table table;
+//    Item outcome;
+//
+//    public AmazonDynamoDbClient() {
+//        this.client = AmazonDynamoDBClientBuilder.standard()
+//                .withEndpointConfiguration(
+//                        new AwsClientBuilder.EndpointConfiguration(dynamodb_service_endpoint, awsRegion)
+//                )
+//                .build();
+//        this.dynamoDB = new DynamoDB(client);
+//        this.logger = LoggerFactory.getLogger(AmazonDynamoDbClient.class);
+//        this.table = dynamoDB.getTable(dynamodb_tablename);
+//    }
+//
+//    public Item get_item(String token){
+//        GetItemSpec spec = new GetItemSpec().withPrimaryKey("id", token);
 //        try {
-//            System.out.println("Attempting to read the item...");
-//            Item outcome = table.getItem(spec);
-//            System.out.println("GetItem succeeded: " + outcome);
+//            logger.info("Attempting to read the item...");
+//            outcome = table.getItem(spec);
+//            logger.info("GetItem succeeded: " + outcome);
 //
 //        }
 //        catch (Exception e) {
-//            System.err.println("Unable to read item: " + year + " " + title);
-//            System.err.println(e.getMessage());
+//            logger.error("Unable to read item: " + token);
+//            logger.error(e.getMessage());
 //        }
+//
+//        return outcome;
+//    }
+//    //
+////        try {
+////            System.out.println("Attempting to read the item...");
+////            Item outcome = table.getItem(spec);
+////            System.out.println("GetItem succeeded: " + outcome);
+////
+////        }
+////        catch (Exception e) {
+////            System.err.println("Unable to read item: " + year + " " + title);
+////            System.err.println(e.getMessage());
+////        }
 
 
 }
