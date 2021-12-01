@@ -25,6 +25,8 @@ import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
 public class AmazonDynamoDbClient {
 
@@ -37,22 +39,24 @@ public class AmazonDynamoDbClient {
     @Value("${amazonProperties.region}")
     private String awsRegion;
 
-    Logger logger = LoggerFactory.getLogger(AmazonDynamoDbClient.class);
-
-    AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-            .withEndpointConfiguration(
-                    new AwsClientBuilder
-                    .EndpointConfiguration(dynamodb_service_endpoint, awsRegion)
-            )
-            .build();
-
+    Logger logger;
+    AmazonDynamoDB client;
+    DynamoDB dynamoDB;
 //    @Deprecated
 //    AmazonDynamoDB client2 = new AmazonDynamoDBClient(new DefaultAWSCredentialsProviderChain());
-    DynamoDB dynamoDB = new DynamoDB(client);
-    Table table = dynamoDB.getTable(dynamodb_tablename);
+
+    Table table;
     Item outcome;
 
     public AmazonDynamoDbClient() {
+        this.client = AmazonDynamoDBClientBuilder.standard()
+                .withEndpointConfiguration(
+                        new AwsClientBuilder.EndpointConfiguration(dynamodb_service_endpoint, awsRegion)
+                )
+                .build();
+        this.dynamoDB = new DynamoDB(client);
+        this.logger = LoggerFactory.getLogger(AmazonDynamoDbClient.class);
+        this.table = dynamoDB.getTable(dynamodb_tablename);
     }
 
     public Item get_item(String token){
