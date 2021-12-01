@@ -301,7 +301,7 @@ public class UserService {
 
         Table table = dynamoDB.getTable("VaradDynamoDB");
 
-        Item item = table.getItem("token", token);
+        Item item = table.getItem("id", token);
 
         logger.info("Item ==> "+ item.toJSON());
 
