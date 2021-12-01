@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
@@ -46,9 +47,9 @@ public class UserService {
 
     @Value("${amazonProperties.snsTopicArn}")
     private String snsTopicArnValue;
-//
-//    @Value("${amazonDynamodb.tableName}")
-//    String dynamodb_tablename;
+
+    @Value("${ttl_expiration_time}")
+    private long ttl_expiration_time;
 
     @Autowired
     public UserService(UserRepository userRepository
@@ -308,22 +309,29 @@ public class UserService {
         logger.info("Item ttl ==> "+item.get("ttl"));
         logger.info("Item username ==> "+item.get("username"));
 
+        String ttl_string = item.get("ttl").toString()+"000";
+        long ttl_long = Long.parseLong(ttl_string);
+        logger.info("ttl_string =>"+ttl_long);
 
-//        Map<String, AttributeValue> map = new HashMap<>();
-//        map.put("username", new AttributeValue("varadds859@gmail.com"));
+        long current_time_long = System.currentTimeMillis();
 
-//        List<Item> items = outcome.getTableItems().get(tableName);
+        logger.info("Time now =>"+System.currentTimeMillis());
 
-//        GetItemResult item_from_dynamodb = amazonDynamoDbClient.generateDynamodbClient().getItem();
-//        Map<String, AttributeValue> item_map = item_from_dynamodb.getItem();
-//        logger.info("Result ==> username: "+item_map.get("username"));
-//        logger.info("Result ==> id: "+item_map.get("id"));
-//        logger.info("Result ==> ttl: "+item_map.get("ttl"));
+        long diff = current_time_long - ttl_long;
+        long diff_in_minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
 
-//        Item item = amazonDynamoDbClient.get_item(token);
-//        logger.info("this is item from dynamodb ->"+item.toJSON());
+        logger.info("diff_in_minutes"+diff_in_minutes);
 
-        return true;
+        if(diff_in_minutes<ttl_expiration_time){
+            return true;
+        } else {
+            return false;
+        }
+
+//        System.out.println("diff ==> "+ diff);
+//        System.out.println("Time difference =>"+ TimeUnit.MILLISECONDS.toMinutes(diff));
+//
+//        return true;
     }
 
     public boolean checkIfUserIsVerified(String username){
@@ -337,7 +345,9 @@ public class UserService {
 
         logger.info("Inside verifyUser");
 
-        checkIfTtlHasPassed(token);
+        boolean ttl_has_passed = checkIfTtlHasPassed(token);
+        
+        logger.info("ttl_has_passed"+ttl_has_passed);
 
         User user = this.getUserByUsername(username);
 
