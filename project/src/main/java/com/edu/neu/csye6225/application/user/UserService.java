@@ -297,16 +297,24 @@ public class UserService {
     public boolean checkIfTtlHasPassed(String token){
 
         logger.info("token = "+token);
+        DynamoDB dynamoDB = new DynamoDB(amazonDynamoDbClient.generateDynamodbClient());
 
+        Table table = dynamoDB.getTable("VaradDynamoDB");
 
-        Map<String, AttributeValue> map = new HashMap<>();
-        map.put("username", new AttributeValue("varadds859@gmail.com"));
+        Item item = table.getItem("token", token);
 
-        GetItemResult item_from_dynamodb = amazonDynamoDbClient.generateDynamodbClient().getItem("id",map);
-        Map<String, AttributeValue> item_map = item_from_dynamodb.getItem();
-        logger.info("Result ==> username: "+item_map.get("username"));
-        logger.info("Result ==> id: "+item_map.get("id"));
-        logger.info("Result ==> ttl: "+item_map.get("ttl"));
+        logger.info("Item ==> "+ item.toJSON());
+
+//        Map<String, AttributeValue> map = new HashMap<>();
+//        map.put("username", new AttributeValue("varadds859@gmail.com"));
+
+//        List<Item> items = outcome.getTableItems().get(tableName);
+
+//        GetItemResult item_from_dynamodb = amazonDynamoDbClient.generateDynamodbClient().getItem();
+//        Map<String, AttributeValue> item_map = item_from_dynamodb.getItem();
+//        logger.info("Result ==> username: "+item_map.get("username"));
+//        logger.info("Result ==> id: "+item_map.get("id"));
+//        logger.info("Result ==> ttl: "+item_map.get("ttl"));
 
 //        Item item = amazonDynamoDbClient.get_item(token);
 //        logger.info("this is item from dynamodb ->"+item.toJSON());
