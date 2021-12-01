@@ -38,10 +38,10 @@ public class AmazonDynamoDbClient {
     Logger logger = LoggerFactory.getLogger(AmazonDynamoDbClient.class);
 
     AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-            .withEndpointConfiguration(
-                    new AwsClientBuilder
-                    .EndpointConfiguration(dynamodb_service_endpoint, awsRegion)
-            )
+//            .withEndpointConfiguration(
+//                    new AwsClientBuilder
+//                    .EndpointConfiguration(dynamodb_service_endpoint, awsRegion)
+//            )
             .build();
 
     DynamoDB dynamoDB = new DynamoDB(client);
