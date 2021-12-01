@@ -304,6 +304,10 @@ public class UserService {
         Item item = table.getItem("id", token);
 
         logger.info("Item ==> "+ item.toJSON());
+        logger.info("Item id ==> "+item.get("id"));
+        logger.info("Item ttl ==> "+item.get("ttl"));
+        logger.info("Item username ==> "+item.get("username"));
+
 
 //        Map<String, AttributeValue> map = new HashMap<>();
 //        map.put("username", new AttributeValue("varadds859@gmail.com"));
