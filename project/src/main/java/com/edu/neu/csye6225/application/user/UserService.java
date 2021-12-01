@@ -309,6 +309,8 @@ public class UserService {
 
     public boolean verifyUser(String username, String token){
 
+        logger.info("Inside verifyUser");
+
         checkIfTtlHasPassed(token);
 
         User user = this.getUserByUsername(username);
