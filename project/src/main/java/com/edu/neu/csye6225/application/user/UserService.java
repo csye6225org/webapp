@@ -294,6 +294,8 @@ public class UserService {
 
     public boolean checkIfTtlHasPassed(String token){
 
+        logger.info("token = "+token);
+
         Item item = amazonDynamoDbClient.get_item(token);
         logger.info("this is item from dynamodb ->"+item.toJSON());
 
