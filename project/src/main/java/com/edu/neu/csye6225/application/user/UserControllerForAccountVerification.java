@@ -39,11 +39,16 @@ public class UserControllerForAccountVerification {
         logger.info("username from email ="+username);
         logger.info("token from verification link="+token_string);
 
-        userService.verifyUser(username, token_string);
 
-        return new ResponseEntity<Object>(
-                "token = "+token_string+" username = "+username,
-                HttpStatus.OK
-        );
+        boolean verification_completed = userService.verifyUser(username, token_string);
+
+        if(!verification_completed) {
+            return new ResponseEntity<Object>("User cannot be verified", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<Object>(
+                    "token = "+token_string+" username = "+username,
+                    HttpStatus.OK
+            );
+        }
     }
 }

@@ -322,7 +322,7 @@ public class UserService {
 
         logger.info("diff_in_minutes"+diff_in_minutes);
 
-        if(diff_in_minutes<ttl_expiration_time){
+        if(diff_in_minutes < 0){
             return true;
         } else {
             return false;
@@ -346,23 +346,30 @@ public class UserService {
         logger.info("Inside verifyUser");
 
         boolean ttl_has_passed = checkIfTtlHasPassed(token);
-        
+
         logger.info("ttl_has_passed"+ttl_has_passed);
 
-        User user = this.getUserByUsername(username);
+        if(!ttl_has_passed){
+            User user = this.getUserByUsername(username);
 
-        LocalDateTime verified_at = LocalDateTime.now();
-        ZonedDateTime verified_at_zoned = verified_at.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Z"));
+            LocalDateTime verified_at = LocalDateTime.now();
+            ZonedDateTime verified_at_zoned = verified_at.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Z"));
 
-        user.setVerified(true);
-        user.setVerified_on(verified_at_zoned);
-        user.setAccount_updated(verified_at_zoned);
+            user.setVerified(true);
+            user.setVerified_on(verified_at_zoned);
+            user.setAccount_updated(verified_at_zoned);
 
-        logger.info(user.toString());
+            logger.info("Updating user information");
+            logger.info(user.toString());
 
-        saveUser(user);
+            saveUser(user);
 
-        return true;
+            return true;
+        }
+        else {
+            logger.error("User cannot be verified. As user waited to long to verify account.");
+            return false;
+        }
     }
 
     public boolean deleteUser(){
