@@ -336,11 +336,11 @@ public class UserService {
 
         logger.info("Inside verifyUser");
 
-        boolean ttl_has_passed = checkIfTtlHasPassed(token);
+        boolean ttl_expiry_check = checkIfTtlHasPassed(token);
 
-        logger.info("ttl_has_passed"+ttl_has_passed);
+        logger.info("ttl_has_passed "+ttl_expiry_check);
 
-        if(!ttl_has_passed){
+        if(ttl_expiry_check){
             User user = this.getUserByUsername(username);
 
             LocalDateTime verified_at = LocalDateTime.now();
