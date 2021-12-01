@@ -1,7 +1,6 @@
 package com.edu.neu.csye6225.application.picture;
 
 import com.amazonaws.util.IOUtils;
-
 import com.edu.neu.csye6225.application.user.UserService;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
@@ -14,8 +13,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
