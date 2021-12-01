@@ -46,7 +46,8 @@ public class AmazonDynamoDbClient {
             )
             .build();
 
-//    AmazonDynamoDB client = new AmazonDynamoDBClient(new DefaultAWSCredentialsProviderChain());
+//    @Deprecated
+//    AmazonDynamoDB client2 = new AmazonDynamoDBClient(new DefaultAWSCredentialsProviderChain());
     DynamoDB dynamoDB = new DynamoDB(client);
     Table table = dynamoDB.getTable(dynamodb_tablename);
     Item outcome;
