@@ -331,4 +331,8 @@ public class UserService {
         return true;
     }
 
+    public boolean deleteUser(){
+        userRepository.deleteAll();
+        return true;
+    }
 }

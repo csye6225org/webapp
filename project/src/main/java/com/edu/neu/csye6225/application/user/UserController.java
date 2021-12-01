@@ -242,6 +242,11 @@ public class UserController {
     }
 
 
+    @DeleteMapping(path = "self")
+    public ResponseEntity<Object> deleteUser(){
 
+        userService.deleteUser();
+        return new ResponseEntity<>("Deleted all users", HttpStatus.OK);
+    }
 
 }
