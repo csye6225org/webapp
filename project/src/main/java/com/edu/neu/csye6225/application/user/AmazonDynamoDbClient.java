@@ -13,8 +13,10 @@
  */
 package com.edu.neu.csye6225.application.user;
 
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
@@ -44,6 +46,7 @@ public class AmazonDynamoDbClient {
             )
             .build();
 
+//    AmazonDynamoDB client = new AmazonDynamoDBClient(new DefaultAWSCredentialsProviderChain());
     DynamoDB dynamoDB = new DynamoDB(client);
     Table table = dynamoDB.getTable(dynamodb_tablename);
     Item outcome;
