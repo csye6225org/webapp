@@ -32,12 +32,6 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class AmazonDynamoDbClient {
 
-//    @Value("${amazonDynamodb.serviceEndpoint}")
-//    private String dynamodb_service_endpoint;
-//
-//    @Value("${amazonDynamodb.tableName}")
-//    String dynamodb_tablename;
-
      @Value("${amazonProperties.region}")
      private String awsRegion;
 
