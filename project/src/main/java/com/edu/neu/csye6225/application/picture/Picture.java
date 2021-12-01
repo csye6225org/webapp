@@ -1,12 +1,7 @@
 package com.edu.neu.csye6225.application.picture;
 
-import com.edu.neu.csye6225.application.user.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity(name = "Picture")
@@ -109,7 +104,6 @@ public class Picture {
                 ", filename='" + filename + '\'' +
                 ", fileurl='" + fileurl + '\'' +
                 ", uploaddate=" + uploaddate +
-//                ", user=" + user +
                 '}';
     }
 }

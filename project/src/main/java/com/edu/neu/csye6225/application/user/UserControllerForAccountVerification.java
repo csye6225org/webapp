@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 @RequestMapping(path = "v1/verifyUserEmail")
 @Transactional
@@ -35,7 +33,6 @@ public class UserControllerForAccountVerification {
 
         logger.info("Inside verify user controller");
 
-//        boolean has_ttl_passed = userService.checkIfTtlHasPassed(token_string);
         logger.info("username from email ="+username);
         logger.info("token from verification link="+token_string);
 
