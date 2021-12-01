@@ -50,7 +50,7 @@
           <collectionProp name="AuthManager.auth_list">
             <elementProp name="" elementType="Authorization">
               <stringProp name="Authorization.url">http://prod.varaddesai.me/v1/user</stringProp>
-              <stringProp name="Authorization.username">varad@gmail.com</stringProp>
+              <stringProp name="Authorization.username">varadds859@gmail.com</stringProp>
               <stringProp name="Authorization.password">Varad@123</stringProp>
               <stringProp name="Authorization.domain"></stringProp>
               <stringProp name="Authorization.realm"></stringProp>
