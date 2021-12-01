@@ -39,14 +39,14 @@ public class UserService {
     @Autowired
     private AmazonSNSClient amazonSNSClient;
 
-    @Autowired
-    private AmazonDynamoDb amazonDynamoDbClient;
+//    @Autowired
+    private AmazonDynamoDbClient amazonDynamoDbClient;
 
     @Value("${amazonProperties.snsTopicArn}")
     private String snsTopicArnValue;
-
-    @Value("${amazonDynamodb.tableName}")
-    String dynamodb_tablename;
+//
+//    @Value("${amazonDynamodb.tableName}")
+//    String dynamodb_tablename;
 
     @Autowired
     public UserService(UserRepository userRepository
@@ -294,22 +294,10 @@ public class UserService {
 
     public boolean checkIfTtlHasPassed(String token){
 
-        DynamoDB dynamoDB = new DynamoDB((AmazonDynamoDB) amazonDynamoDbClient);
-        Table table = dynamoDB.getTable(dynamodb_tablename);
+        Item item = amazonDynamoDbClient.get_item(token);
+        logger.info("this is item from dynamodb ->"+item.toJSON());
 
-        GetItemSpec spec = new GetItemSpec().withPrimaryKey("id", token);
-
-        try {
-            logger.info("Attempting to read the item...");
-            Item outcome = table.getItem(spec);
-            logger.info("GetItem succeeded: " + outcome);
-        }
-        catch (Exception e) {
-            logger.error("Unable to read item: " + token);
-            logger.error(e.getMessage());
-        }
-
-        return false;
+        return true;
     }
 
     public boolean checkIfUserIsVerified(String username){
@@ -319,7 +307,9 @@ public class UserService {
         return user.getVerified();
     }
 
-    public boolean verifyUser(String username){
+    public boolean verifyUser(String username, String token){
+
+        checkIfTtlHasPassed(token);
 
         User user = this.getUserByUsername(username);
 

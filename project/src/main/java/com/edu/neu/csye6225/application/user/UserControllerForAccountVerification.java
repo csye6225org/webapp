@@ -39,7 +39,7 @@ public class UserControllerForAccountVerification {
         logger.info("username from email ="+username);
         logger.info("token from verification link="+token_string);
 
-        userService.verifyUser(username);
+        userService.verifyUser(username, token_string);
 
         return new ResponseEntity<Object>(
                 "token = "+token_string+" username = "+username,
