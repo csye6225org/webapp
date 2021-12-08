@@ -112,7 +112,6 @@ public class PictureController {
         }
     }
 
-
     @DeleteMapping("/self/pic/")
     public ResponseEntity<Object> deleteFile(HttpServletRequest request) {
 
